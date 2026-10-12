@@ -2,6 +2,8 @@
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { library } from '../../lib/content';
+import { folderPath, folderLink } from '../../lib/writing-folders.mjs';
+import { resolve } from 'node:path';
 import { url, displayDate } from '../../lib/site';
 import 'katex/dist/katex.min.css';
 export async function getStaticPaths() {
@@ -14,7 +16,14 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 const { data } = entry;
-const { topics, writing } = await library();
+const { topics, writing, folders } = await library();
+const directory = folderPath(
+  entry,
+  resolve(
+    process.env.DEMO_MODE === 'true' ? 'fixtures/writing' : 'content/writing',
+  ),
+);
+const folder = folders.find((f) => f.path === directory)!;
 const topic = topics.find((t) => t.data.slug === data.topic);
 const siblings = topic
   ? writing
@@ -28,11 +37,8 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 <Base title={data.title} description={data.description} section="writing">
   <article>
     <header class="article-heading">
-      <a
-        class="back-link"
-        href={topic ? url(`/topics/${topic.data.slug}/`) : url('/writing/')}
-      >
-        ← {topic ? topic.data.title : '全部文章'}
+      <a class="back-link" href={url(folderLink(directory))}>
+        ← {folder.title}
       </a>
       <div class="entry-meta">{data.tags.join(' / ')}</div>
       <h1>{data.title}</h1>
@@ -65,6 +71,11 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
       </div>
     </div>
     <footer class="article-end">
+      {topic && (
+        <a class="text-link" href={url(`/topics/${topic.data.slug}/`)}>
+          阅读专题：{topic.data.title} ↗
+        </a>
+      )}
       <div>
         {siblings[current - 1] && (
           <a href={url(`/writing/${siblings[current - 1].data.slug}/`)}>
@@ -77,8 +88,8 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
           </a>
         )}
       </div>
-      <a class="text-link" href={url('/writing/')}>
-        返回文章列表 ↗
+      <a class="text-link" href={url(folderLink(directory))}>
+        返回{folder.title} ↗
       </a>
     </footer>
   </article>

@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro';
+import WritingDirectory from '../../../components/WritingDirectory.astro';
+import { library } from '../../../lib/content';
+export async function getStaticPaths() {
+  const { folders } = await library();
+  return folders
+    .filter((f) => f.path)
+    .map((folder) => ({ params: { path: folder.path }, props: { folder } }));
+}
+const { folder } = Astro.props;
+---
+
+<Base
+  title={folder.title}
+  description={folder.description || undefined}
+  section="writing"
+>
+  <WritingDirectory path={folder.path} />
+</Base>

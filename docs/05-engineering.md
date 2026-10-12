@@ -94,3 +94,9 @@ README 已记录真实命令和环境配置。GitHub 公开个人站仓库已创
 本地发布工具只提交 `content/`、`public/`，要求网站代码与配置已提交、没有其他暂存改动、本地与远端起点一致。文件稳定后做生产检查、构建及内链资源校验；失败不提交，push 失败保留提交并重试。云端使用官方 Pages actions 和标准 Ubuntu runner，检查通过才部署。监测进程暂不安装系统自启任务。
 
 将已有传递依赖 `rehype-raw` 显式声明为直接依赖，在 URL 改写前解析 Markdown 原生 HTML，解决 HTML 中 `src`、`href`、`poster` 在子路径部署时没有前缀的问题。增加一项维护声明，未加入客户端框架。替代方案是限制作者只写普通 Markdown 或在 HTML 中手写部署前缀，均不符合作者希望自由书写交互且保留部署可迁移性的需求。JavaScript 字符串与 CSS `url()` 不自动改写，应使用相对资源路径。
+
+## 11. 合集与项目目录
+
+`writing-folders.mjs` 从文章原始 filePath 推导所属目录，递归读取 `_collection.json`，校验配置及 Logo，保留公开文章的祖先目录。共享 `WritingDirectory` 渲染根目录及合集索引，使用独立 `/writing/collections/` 路由避免与文章 slug 冲突；统一 URL 层处理中文编码和部署前缀。不引入文件索引数据库或额外依赖。
+
+projects 和 toys 使用同一个 schema、排序校验、卡片、网格、速览和详情组件，频道类型是通用参数，不为具体作品添加分支。发布监测已覆盖整个 content 和 public，新目录与配置无需额外注册。构建测试覆盖嵌套合集、草稿隐藏、稳定文章地址、Logo、子路径以及同 slug 的跨频道路由；独立目录测试覆盖错误配置与缺少 Logo。

@@ -1,33 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WritingList from '../../components/WritingList.astro';
-import { library } from '../../lib/content';
-import { url } from '../../lib/site';
-const { writing, topics } = await library();
+import WritingDirectory from '../../components/WritingDirectory.astro';
 ---
 
-<Base title="笔记库" section="writing">
-  <header class="page-heading">
-    <p class="eyebrow">WRITING</p>
-    <h1>笔记库</h1>
-    <p>笔记、实验记录，还有一些感兴趣的事。</p>
-  </header>
-  {topics.length > 0 && (
-    <div class="topic-links">
-      {topics.map(({ data }) => (
-        <a href={url(`/topics/${data.slug}/`)}>
-          {data.title}
-          <span aria-hidden="true">↗</span>
-        </a>
-      ))}
-    </div>
-  )}
-  {writing.length ? (
-    <WritingList entries={writing} heading="h2" />
-  ) : (
-    <div class="empty-state">
-      <span>暂无文章</span>
-      <p>文章发布后会显示在这里。</p>
-    </div>
-  )}
+<Base title="文章库" section="writing">
+  <WritingDirectory />
 </Base>

@@ -1,0 +1,14 @@
+---
+import WorkDetail from '../../components/WorkDetail.astro';
+import { library } from '../../lib/content';
+export async function getStaticPaths() {
+  const { projects } = await library();
+  return projects.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+const { entry } = Astro.props;
+---
+
+<WorkDetail entry={entry} catalog="projects" />

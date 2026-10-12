@@ -8,9 +8,10 @@
 
 ```text
 content/
-  writing/       # 文章 Markdown
+  writing/       # 文章 Markdown，文件夹决定合集层级
   topics/        # 专题元数据
   toys/          # 玩具 Markdown
+  projects/      # 项目 Markdown，与玩具使用相同字段
   pages/         # 关于等固定内容
 public/
   media/         # 按内容 slug 分组的图片与视频
@@ -88,14 +89,14 @@ order: 1
 
 专题本身不维护第二份文章列表，通过文章的 `topic` 和 `topicOrder` 生成。没有公开文章的专题不生成生产专题页，也不进入索引或站点图。
 
-## 5. 玩具字段与模板
+## 5. 玩具与项目字段及模板
 
 除通用字段外：
 
 | 字段            | 必填 | 约定                                                         |
 | --------------- | ---- | ------------------------------------------------------------ |
 | `status`        | 否   | `in-progress` / `completed` / `paused`；缺省不显示           |
-| `featuredOrder` | 否   | 正整数，唯一；决定玩具架中的优先排序，不在首页展示具体玩具   |
+| `featuredOrder` | 否   | 正整数，唯一；决定各自目录中的优先排序，不在首页展示具体玩具 |
 | `cover`         | 否   | 预览图片对象，包含 `src` 和 `alt`                            |
 | `video`         | 否   | 本地视频对象，包含 `src`、可选 `poster` 和文字 `description` |
 | `links`         | 否   | 可包含 `source`、`demo`、`download` 的 HTTPS URL             |
@@ -142,3 +143,35 @@ featuredOrder: 1
 ## 8. 设计预览素材
 
 `DEMO_MODE=true` 使用 `fixtures/public/` 作为资源根目录，正式模式使用 `public/`。三张 SVG 为原创示意而非项目实际截图，卡片显式标注“示意图”。请将真实媒体放入 `public/media/`，在正式 Markdown 中填写 `cover`。无封面仍可发布，无需改组件。
+
+## 9. 文件夹合集
+
+每一个 `content/writing/` 下的文件夹都是合集，嵌套目录生成对应下级索引。无需在文章中手填合集字段，不维护第二份文章清单。根目录 Markdown 显示在文章库；文章在整个 writing 集合中的 slug 仍需唯一。
+
+```text
+content/writing/
+  一篇独立文章.md
+  计算机网络/
+    _collection.json
+    协议概述.md
+    连接建立/
+      _collection.json
+      三次握手.md
+```
+
+每个目录的 `_collection.json` 可选（包括 writing 根目录），参考 `templates/collection.json`：
+
+```json
+{
+  "title": "计算机网络",
+  "description": "协议、连接与网络实验。",
+  "logo": "/media/collections/network.svg",
+  "order": 1
+}
+```
+
+所有字段均可省略，空对象有效。title 缺省使用文件夹名，description 缺省使用共享说明，logo 缺省使用文件夹图标。Logo 放在 `public/media/`，路径遵循本站媒体约定；缺文件或字段格式不正确会阻止构建。order 为正整数，可重复，同顺序按路径排序。配置名必须准确，不支持未知字段。
+
+只有公开文章及其祖先目录进入合集索引，空目录、仅草稿目录隐藏。合集路径随目录移动变化；文章详情由 slug 决定，目录移动不改变文章链接。旧 topic/topicOrder 保持可选，表达跨目录的阅读顺序，与文件夹合集互不替代。新增合集与配置同样由发布监测程序自动检测。
+
+项目放入 `content/projects/`，参考 `templates/project.md`；字段和校验与玩具一致，featuredOrder 分别在项目目录、玩具架内唯一。同 slug 可在 projects 和 toys 各用一次，分别生成不同地址。示例合集和项目只在 fixtures 中展示。

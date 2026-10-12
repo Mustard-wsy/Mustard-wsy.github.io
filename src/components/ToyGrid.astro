@@ -2,14 +2,15 @@
 import type { CollectionEntry } from 'astro:content';
 import ToyCard from './ToyCard.astro';
 interface Props {
-  entries: CollectionEntry<'toys'>[];
+  entries: CollectionEntry<'toys' | 'projects'>[];
+  catalog?: 'toys' | 'projects';
   heading?: 'h2' | 'h3';
 }
-const { entries, heading = 'h3' } = Astro.props;
+const { entries, heading = 'h3', catalog = 'toys' } = Astro.props;
 ---
 
 <div class="toy-grid">
   {entries.map((entry) => (
-    <ToyCard entry={entry} heading={heading} />
+    <ToyCard entry={entry} heading={heading} catalog={catalog} />
   ))}
 </div>

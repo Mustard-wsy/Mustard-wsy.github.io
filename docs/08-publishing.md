@@ -87,3 +87,9 @@ npm run publish:notes
 ## 验证范围
 
 本地构建覆盖正式、样例和 `/Blog/` 子路径；样例文章包含折叠 HTML 与计数按钮，正式构建不含这些演示资源。发布工具通过临时本地 Git 仓库和 bare remote 验证提交、代码隔离、文件修改期间取消、push 失败重试。`npm run check`、`npm run format:check` 与 13 项测试通过。实际仓库创建、Git 鉴权、首次 push 和 [首次 Actions 部署](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 已成功。浏览器验证正式首页、样例 HTML 折叠说明及计数按钮；四个主要公网页面返回 HTTP 200。尚未用作者真实笔记完成一次自动上传；当前没有真实笔记。
+
+## 合集与项目的上传
+
+在 `content/writing/` 中按所需层级创建文件夹，再复制 Markdown；每个目录可放 `_collection.json` 配置 title、description、logo、order，参考 `templates/collection.json`。Logo 资源放入 `public/media/`。无需修改代码或文章元数据中的合集字段；根目录文章直接显示在文章库。空目录与仅草稿目录不会公开，合集规则见[内容指南](04-content-guide.md)。
+
+项目 Markdown 放入 `content/projects/`，模板为 `templates/project.md`，封面与脚本仍放入 public。玩具保持 `content/toys/`。两者使用相同字段但有各自的列表和详情地址。上述新目录与配置都已处于现有监测范围内。

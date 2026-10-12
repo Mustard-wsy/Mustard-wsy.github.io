@@ -1,11 +1,13 @@
 import { getCollection } from 'astro:content';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { writingFolders } from './writing-folders.mjs';
 
 export async function library() {
-  const [allWriting, allToys, allTopics] = await Promise.all([
+  const [allWriting, allToys, allProjects, allTopics] = await Promise.all([
     getCollection('writing'),
     getCollection('toys'),
+    getCollection('projects'),
     getCollection('topics'),
   ]);
   function unique(values: (string | number | undefined)[], name: string) {
@@ -19,7 +21,7 @@ export async function library() {
     month: '2-digit',
     day: '2-digit',
   }).format(new Date());
-  for (const entries of [allWriting, allToys]) {
+  for (const entries of [allWriting, allToys, allProjects]) {
     unique(
       entries.map((e) => e.data.slug),
       'slug',
@@ -35,10 +37,11 @@ export async function library() {
     allTopics.map((e) => e.data.slug),
     '专题 slug',
   );
-  unique(
-    allToys.map((e) => e.data.featuredOrder),
-    '精选顺序',
-  );
+  for (const entries of [allToys, allProjects])
+    unique(
+      entries.map((e) => e.data.featuredOrder),
+      '精选顺序',
+    );
   for (const { data } of allWriting) {
     if (Boolean(data.topic) !== Boolean(data.topicOrder))
       throw new Error(`${data.slug}: 专题与顺序需要同时填写`);
@@ -52,7 +55,7 @@ export async function library() {
         .map((e) => e.data.topicOrder),
       `${topic.data.slug} 文章顺序`,
     );
-  for (const { data } of allToys) {
+  for (const { data } of [...allToys, ...allProjects]) {
     for (const path of [data.cover?.src, data.video?.src, data.video?.poster]) {
       if (
         path &&
@@ -73,13 +76,23 @@ export async function library() {
     b.data.publishedAt.localeCompare(a.data.publishedAt) ||
     a.data.slug.localeCompare(b.data.slug);
   const writing = allWriting.filter((e) => !e.data.draft).sort(byDate);
-  const toys = allToys
-    .filter((e) => !e.data.draft)
-    .sort(
-      (a, b) =>
-        (a.data.featuredOrder ?? Infinity) -
-          (b.data.featuredOrder ?? Infinity) || byDate(a, b),
-    );
+  const sortWorks = (entries: typeof allToys | typeof allProjects) =>
+    entries
+      .filter((e) => !e.data.draft)
+      .sort(
+        (a, b) =>
+          (a.data.featuredOrder ?? Infinity) -
+            (b.data.featuredOrder ?? Infinity) || byDate(a, b),
+      );
+  const toys = sortWorks(allToys);
+  const projects = sortWorks(allProjects);
+  const folders = writingFolders(
+    resolve(
+      process.env.DEMO_MODE === 'true' ? 'fixtures/writing' : 'content/writing',
+    ),
+    writing,
+    resolve(process.env.DEMO_MODE === 'true' ? 'fixtures/public' : 'public'),
+  );
   const topics = allTopics
     .filter((t) => writing.some((e) => e.data.topic === t.data.slug))
     .sort(
@@ -87,5 +100,5 @@ export async function library() {
         (a.data.order ?? Infinity) - (b.data.order ?? Infinity) ||
         a.data.slug.localeCompare(b.data.slug),
     );
-  return { writing, toys, topics };
+  return { writing, toys, projects, topics, folders };
 }

@@ -1,0 +1,115 @@
+---
+import WritingList from './WritingList.astro';
+import { library } from '../lib/content';
+import { folderLink } from '../lib/writing-folders.mjs';
+import { url } from '../lib/site';
+interface Props {
+  path?: string;
+}
+const { path = '' } = Astro.props;
+const { folders } = await library();
+const current = folders.find((f) => f.path === path)!;
+const children = folders.filter((f) => f.path && f.parent === path);
+const ancestors = path
+  .split('/')
+  .filter(Boolean)
+  .map((_, index, parts) =>
+    folders.find((f) => f.path === parts.slice(0, index + 1).join('/'))!,
+  );
+---
+
+<header class="page-heading">
+  {path && (
+    <nav class="breadcrumbs" aria-label="合集路径">
+      <a href={url('/writing/')}>文章库</a>
+      {ancestors.map((folder) => (
+        <>
+          <span aria-hidden="true">/</span>
+          {folder.path === path ? (
+            <span aria-current="page">{folder.title}</span>
+          ) : (
+            <a href={url(folderLink(folder.path))}>{folder.title}</a>
+          )}
+        </>
+      ))}
+    </nav>
+  )}
+  <div class="collection-heading">
+    {current.logo && (
+      <img
+        class="collection-logo"
+        src={url(current.logo)}
+        alt=""
+        width="56"
+        height="56"
+      />
+    )}
+    <div>
+      <p class="eyebrow">{path ? 'COLLECTION' : 'WRITING'}</p>
+      <h1>{current.title}</h1>
+    </div>
+  </div>
+  <p>
+    {current.description ||
+      (!path
+        ? '笔记、实验记录，还有一些感兴趣的事。'
+        : '这个合集中的文章与下级目录。')}
+  </p>
+</header>
+{children.length > 0 && (
+  <section aria-label="文章合集" class="collection-grid">
+    {children.map((folder) => (
+      <a
+        class="collection-card pixel-panel"
+        href={url(folderLink(folder.path))}
+      >
+        {folder.logo ? (
+          <img
+            class="collection-logo"
+            src={url(folder.logo)}
+            alt=""
+            width="48"
+            height="48"
+            loading="lazy"
+          />
+        ) : (
+          <svg
+            class="collection-logo"
+            viewBox="0 0 32 32"
+            aria-hidden="true"
+            shape-rendering="crispEdges"
+          >
+            <path fill="#bdc6df" d="M3 9h26v20H3z" />
+            <path
+              fill="#35445e"
+              d="M3 4h11v3h15v3H3zm0 6h3v16H3zm23 0h3v16h-3zM3 26h26v3H3z"
+            />
+            <path fill="#e28282" d="M9 15h14v3H9z" />
+          </svg>
+        )}
+        <div>
+          <h2>{folder.title}</h2>
+          {folder.description && <p>{folder.description}</p>}
+        </div>
+        <span class="entry-arrow" aria-hidden="true">
+          ↗
+        </span>
+      </a>
+    ))}
+  </section>
+)}
+{current.entries.length > 0 && (
+  <section aria-label="本目录文章">
+    {children.length > 0 && <h2 class="directory-label">本目录文章</h2>}
+    <WritingList
+      entries={current.entries}
+      heading={children.length ? 'h3' : 'h2'}
+    />
+  </section>
+)}
+{!children.length && !current.entries.length && (
+  <div class="empty-state">
+    <span>暂无文章</span>
+    <p>文章发布后会显示在这里。</p>
+  </div>
+)}

@@ -68,9 +68,10 @@ for (const output of outputs) {
           html.includes(`id="${match[1]}"`),
           'Preview dialog must exist',
         );
-        const slug = match[1].replace('preview-', '');
+        const [, catalog, ...parts] = match[1].split('-');
+        const slug = parts.join('-');
         assert.ok(
-          html.includes(`href="${output.base}toys/${slug}/"`),
+          html.includes(`href="${output.base}${catalog}/${slug}/"`),
           'A static fallback link must exist',
         );
       }
@@ -100,7 +101,7 @@ test('production excludes sample routes and keeps useful empty states', () => {
   if (!toys.length)
     assert.match(
       readFileSync(join(output, 'toys/index.html'), 'utf8'),
-      /暂无项目/,
+      /暂无玩具/,
     );
   if (!writing.length)
     assert.match(
@@ -114,7 +115,8 @@ test('home stays an entrance in production, demo and subpath builds', () => {
     assert.match(home, new RegExp(`href="${output.base}toys/"`));
     assert.match(home, new RegExp(`href="${output.base}writing/"`));
     assert.match(home, /玩具架/);
-    assert.match(home, /笔记库/);
+    assert.match(home, /文章库/);
+    assert.match(home, new RegExp(`href="${output.base}projects/"`));
     assert.doesNotMatch(
       home,
       /toy-card|writing-row|<dialog|最近文章|暂无项目|TCP 为什么|水果忍者/,
@@ -150,4 +152,63 @@ test('Markdown HTML interactions and script paths survive root and subpath build
     assert.ok(existsSync(join(output.dir, 'media/note-counter.js')));
   }
   assert.ok(!existsSync(join(outputs[0].dir, 'media/note-counter.js')));
+});
+
+test('folders reflect nested paths, hide drafts, preserve article links and share project templates', () => {
+  for (const output of outputs.slice(1)) {
+    const writing = readFileSync(
+      join(output.dir, 'writing/index.html'),
+      'utf8',
+    );
+    assert.match(writing, /计算机网络/);
+    assert.match(writing, /算法笔记/);
+    assert.doesNotMatch(writing, /仅草稿|TCP 为什么需要/);
+    assert.ok(writing.includes(`${output.base}media/finder.svg`));
+    const parent = readFileSync(
+      join(output.dir, 'writing/collections/计算机网络/index.html'),
+      'utf8',
+    );
+    assert.match(parent, /连接建立/);
+    const nested = readFileSync(
+      join(output.dir, 'writing/collections/计算机网络/连接建立/index.html'),
+      'utf8',
+    );
+    assert.ok(nested.includes(`${output.base}writing/tcp-handshake/`));
+    assert.ok(
+      !existsSync(join(output.dir, 'writing/collections/仅草稿/index.html')),
+    );
+    const article = readFileSync(
+      join(output.dir, 'writing/tcp-handshake/index.html'),
+      'utf8',
+    );
+    assert.ok(
+      article.includes(
+        `${output.base}writing/collections/${encodeURIComponent('计算机网络')}/${encodeURIComponent('连接建立')}/`,
+      ),
+    );
+    const project = readFileSync(
+      join(output.dir, 'projects/index.html'),
+      'utf8',
+    );
+    assert.match(project, /preview-projects-terminal-fruit-ninja/);
+    assert.ok(project.includes(`${output.base}projects/terminal-fruit-ninja/`));
+    const detail = readFileSync(
+      join(output.dir, 'projects/terminal-fruit-ninja/index.html'),
+      'utf8',
+    );
+    assert.match(detail, /返回项目目录/);
+    assert.ok(
+      existsSync(join(output.dir, 'toys/terminal-fruit-ninja/index.html')),
+    );
+  }
+  assert.ok(
+    !existsSync(
+      join(outputs[0].dir, 'projects/terminal-fruit-ninja/index.html'),
+    ),
+  );
+  assert.ok(
+    !existsSync(
+      join(outputs[0].dir, 'writing/collections/计算机网络/index.html'),
+    ),
+  );
 });

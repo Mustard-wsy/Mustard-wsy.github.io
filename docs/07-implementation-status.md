@@ -69,3 +69,11 @@
 Markdown 原生 HTML 先解析再处理部署前缀，样例文章新增折叠说明和外部脚本计数按钮。正式构建继续隔离样例与其资源。验证：`npm run check` 无错误、警告或提示，`npm test` 13 项通过，`npm run format:check` 通过。浏览器实际操作折叠说明与计数按钮成功。发布测试使用临时本地 Git 仓库，覆盖提交、文件稳定性、代码隔离与失败重试。
 
 公开仓库 [Mustard-wsy/Mustard-wsy.github.io](https://github.com/Mustard-wsy/Mustard-wsy.github.io) 已创建，Git 认证恢复，首次上传成功；[首次 Actions](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 构建与部署成功。正式站 [mustard-wiki](https://mustard-wsy.github.io/) 首页通过浏览器检查，首页、关于页、笔记库与玩具架均返回 HTTP 200，未含设计预览横幅。Git 本地配置使用现有系统代理、开启 TLS 证书校验、提交使用 noreply 邮箱。真实笔记尚未录入；RSS 与站点图仍未实现，监测进程尚未设为系统自启。
+
+## 2026-10-12 文件夹合集与项目目录
+
+文章库按 `content/writing/` 实际文件夹生成合集索引，支持中文目录名与嵌套，每层只显示直属文章和直属子合集。目录可用 `_collection.json` 配置 title、description、logo、order；默认名称为目录名，空目录与仅草稿目录不显示。文章详情仍由 slug 决定，返回链接指向所属合集；保留可选专题阅读关系。
+
+新增独立项目目录 `/projects/` 与 `content/projects/`，项目与玩具共用 schema、卡片、网格、速览和详情。首页增至玩具架、文章库、项目目录三个入口，继续不堆砌具体内容。手机页头分成站名与导航两行；新增合集、项目模板和发布指南。正式内容仍为空，预览样例已迁入嵌套目录，项目样例仅位于 fixtures。
+
+验证：`npm run check` 33 个文件无错误、警告或提示，`npm test` 16 项通过，`npm run format:check` 通过。构建检查正式、预览与 `/Blog/` 子路径，覆盖合集路径、Logo、草稿隐藏、稳定文章地址、同 slug 的独立项目与玩具路由；目录单元测试验证配置错误与缺少资源。浏览器走通文章库 → 合集 → 子合集，检查桌面、390px 和 320px 布局无横向溢出，操作桌面与手机项目速览的打开、关闭。公网更新由 main 提交触发 Pages 工作流，最终状态见 GitHub Actions。

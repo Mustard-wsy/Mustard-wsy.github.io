@@ -2,23 +2,25 @@
 import type { CollectionEntry } from 'astro:content';
 import { url, statusLabels, demo } from '../lib/site';
 interface Props {
-  entry: CollectionEntry<'toys'>;
+  entry: CollectionEntry<'toys' | 'projects'>;
+  catalog?: 'toys' | 'projects';
   heading?: 'h2' | 'h3';
 }
-const { entry, heading: Heading = 'h3' } = Astro.props;
+const { entry, heading: Heading = 'h3', catalog = 'toys' } = Astro.props;
 const { data } = entry;
-const id = `preview-${data.slug}`;
+const id = `preview-${catalog}-${data.slug}`;
+const catalogTitle = catalog === 'projects' ? '项目目录' : '玩具架';
 ---
 
 <article class="toy-card pixel-panel">
   <div class="toy-title">
     <Heading>
-      <a href={url(`/toys/${data.slug}/`)}>{data.title}</a>
+      <a href={url(`/${catalog}/${data.slug}/`)}>{data.title}</a>
     </Heading>
     <span aria-hidden="true">↗</span>
   </div>
   {data.cover && (
-    <a class="toy-preview" href={url(`/toys/${data.slug}/`)}>
+    <a class="toy-preview" href={url(`/${catalog}/${data.slug}/`)}>
       <img
         src={url(data.cover.src)}
         alt={data.cover.alt}
@@ -44,7 +46,7 @@ const id = `preview-${data.slug}`;
       关闭 ×
     </button>
   </form>
-  <p class="eyebrow">玩具架 / 速览</p>
+  <p class="eyebrow">{catalogTitle} / 速览</p>
   <h2 id={`${id}-title`}>{data.title}</h2>
   {data.cover && (
     <img
@@ -56,7 +58,7 @@ const id = `preview-${data.slug}`;
   )}
   <p>{data.description}</p>
   <p class="entry-meta">{data.tags.join(' · ')}</p>
-  <a class="pixel-button" href={url(`/toys/${data.slug}/`)}>
+  <a class="pixel-button" href={url(`/${catalog}/${data.slug}/`)}>
     查看完整项目 ↗
   </a>
 </dialog>
