@@ -2,7 +2,7 @@
 
 一个记录个人笔记、实验和喜欢的事物的网站。「迷途未远」是作者的建站初衷，在关于页说明。
 
-项目已完成第一轮可运行界面：使用 Astro、TypeScript 和普通 CSS，实现首页、文章阅读、玩具架及关联页面。已加入桌面侧边 / 手机底部玩具速览。当前用于评审视觉和内容模板，尚未部署到公网。
+项目已完成第一轮可运行界面：使用 Astro、TypeScript 和普通 CSS，实现首页、文章阅读、玩具架及关联页面。已加入桌面侧边 / 手机底部玩具速览。正式站已部署至 [mustard-wiki](https://mustard-wsy.github.io/)，预览样例继续隔离。
 
 ## 本地运行
 
@@ -42,7 +42,7 @@ npm run dev:demo
 - `src/components/` 与 `src/layouts/`：共享组件和全局布局。
 - `fixtures/`：仅供设计预览的样例，不是作者已发表的内容。
 
-已准备 GitHub Pages 工作流与本地内容发布工具，账号为 `Mustard-wsy`，拟采用个人站仓库 `Mustard-wsy.github.io`。仓库创建、首次上传和公网部署尚未完成，操作见[托管与日常发布](docs/08-publishing.md)。部署地址由 Pages 工作流传入；未配置 `SITE_URL` 的本地构建不生成 canonical。RSS 与站点图尚未补齐。
+已连接公开个人站仓库 [Mustard-wsy.github.io](https://github.com/Mustard-wsy/Mustard-wsy.github.io)，首次上传、GitHub Pages 工作流与公网部署已验证，操作见[托管与日常发布](docs/08-publishing.md)。部署地址由 Pages 工作流传入；未配置 `SITE_URL` 的本地构建不生成 canonical。RSS 与站点图尚未补齐。
 
 首次连接仓库后，运行 `npm run publish:watch`，再把打磨好的 Markdown 复制到 `content/writing/`，配图与脚本放入 `public/media/<slug>/`。文件稳定 10 秒且检查通过后自动提交上传；进程需保持运行。单次发布用 `npm run publish:notes`，笔记格式参考 `templates/note.md`。支持 Markdown 中的原生 HTML 与浏览器脚本。
 

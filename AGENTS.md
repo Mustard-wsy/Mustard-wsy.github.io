@@ -25,6 +25,6 @@
 - 引入重要依赖或改变架构时，记录原因、代价和替代方案。
 - 框架为 Astro 7 + TypeScript，包管理器为 npm。使用 `npm run check`、`npm test` 和 `npm run format:check` 验证相关变更。
 - 视觉开发用 `npm run dev:demo`；正式模式只读取 `content/`，不能将 `fixtures/` 样例复制成正式成果发布。
-- 当前实现与已验证范围见 `docs/07-implementation-status.md`；RSS、站点图和公网部署尚未完成。GitHub Pages 工作流与本地发布工具已准备，首次配置和日常复制发布见 `docs/08-publishing.md`；不要将本地验证误称为公网部署成功。
+- 当前实现与已验证范围见 `docs/07-implementation-status.md`；RSS 与站点图尚未完成，GitHub Pages 公网部署已验证。工作流与本地发布工具已准备，首次配置和日常复制发布见 `docs/08-publishing.md`；不要将本地验证误称为公网部署成功。
 
 - 当前视觉为 D13 像素工作台：浅冷背景、阶梯边框、短硬阴影、普通中文字体；不要回退为暖白纸面、玻璃面板或平台山景。速览是共享渐进增强，不为具体玩具编写分支。

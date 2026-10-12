@@ -64,6 +64,8 @@
 
 ## 2026-10-12 发布准备与 HTML 交互
 
-已准备 GitHub Pages 工作流、`publish.config.json`、本地单次发布与持续监测脚本、构建内链资源校验和 Markdown 模板。账号确认为 `Mustard-wsy`，拟采用 `Mustard-wsy.github.io` 个人站。发布工具只提交内容与公共资源，检查代码状态和文件稳定性，并保留失败 push 的重试状态。
+已准备 GitHub Pages 工作流、`publish.config.json`、本地单次发布与持续监测脚本、构建内链资源校验和 Markdown 模板。账号确认为 `Mustard-wsy`，采用 `Mustard-wsy.github.io` 个人站。发布工具只提交内容与公共资源，检查代码状态和文件稳定性，并保留失败 push 的重试状态。
 
-Markdown 原生 HTML 先解析再处理部署前缀，样例文章新增折叠说明和外部脚本计数按钮。正式构建继续隔离样例与其资源。发布测试使用临时本地 Git 仓库，不代表 GitHub 已部署。仓库创建、首次上传、Git 认证、Actions 及公网访问仍待完成；RSS 与站点图仍未实现。
+Markdown 原生 HTML 先解析再处理部署前缀，样例文章新增折叠说明和外部脚本计数按钮。正式构建继续隔离样例与其资源。验证：`npm run check` 无错误、警告或提示，`npm test` 13 项通过，`npm run format:check` 通过。浏览器实际操作折叠说明与计数按钮成功。发布测试使用临时本地 Git 仓库，覆盖提交、文件稳定性、代码隔离与失败重试。
+
+公开仓库 [Mustard-wsy/Mustard-wsy.github.io](https://github.com/Mustard-wsy/Mustard-wsy.github.io) 已创建，Git 认证恢复，首次上传成功；[首次 Actions](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 构建与部署成功。正式站 [mustard-wiki](https://mustard-wsy.github.io/) 首页通过浏览器检查，首页、关于页、笔记库与玩具架均返回 HTTP 200，未含设计预览横幅。Git 本地配置使用现有系统代理、开启 TLS 证书校验、提交使用 noreply 邮箱。真实笔记尚未录入；RSS 与站点图仍未实现，监测进程尚未设为系统自启。

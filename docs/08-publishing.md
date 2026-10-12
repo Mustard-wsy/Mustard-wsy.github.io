@@ -1,6 +1,6 @@
 # 托管与日常发布
 
-更新日期：2026-10-12。GitHub 账号已确认是 `Mustard-wsy`；下列仓库与网址是准备采用的配置，尚未创建、上传或完成公网部署。
+更新日期：2026-10-12。公开仓库 [Mustard-wsy/Mustard-wsy.github.io](https://github.com/Mustard-wsy/Mustard-wsy.github.io) 已创建并上传，正式站 [mustard-wiki](https://mustard-wsy.github.io/) 已上线。首次 Actions 构建与部署成功，四个主要页面均返回 HTTP 200。
 
 ## 免费托管
 
@@ -11,6 +11,8 @@
 公开仓库中的源文件和 Git 历史可被查看，`draft: true` 只隐藏网站内容。未打磨好的笔记继续留在作者的其他笔记目录；复制到本站的 `content/` 和 `public/` 代表允许上传这些文件。邮箱不写入网站配置，Git 提交建议使用 GitHub 的 noreply 地址。
 
 ## 首次配置
+
+本机与当前仓库已完成以下配置，无需重复初始化。Git 使用本机现有系统代理 `http://127.0.0.1:7897`（仅仓库本地配置），证书校验开启；日后代理端口改变时更新 `git config --local http.proxy <地址>`，不再使用代理时运行 `git config --local --unset http.proxy`。认证由 Git Credential Manager 管理，未把凭据写入源码。
 
 1. 登录 GitHub，新建公开仓库 `Mustard-wsy.github.io`，不自动生成 README、许可或 gitignore。
 2. 网站目录首次建立 Git 仓库并提交代码；这一步只做一次。登录可通过 Git Credential Manager 首次 push 的提示完成，勿把令牌放入仓库。
@@ -84,4 +86,4 @@ npm run publish:notes
 
 ## 验证范围
 
-本地构建覆盖正式、样例和 `/Blog/` 子路径；样例文章包含折叠 HTML 与计数按钮，正式构建不含这些演示资源。发布工具通过临时本地 Git 仓库和 bare remote 验证提交、代码隔离、文件修改期间取消、push 失败重试。实际 GitHub 创建仓库、鉴权、Actions 与公网访问仍待首次配置后验证。
+本地构建覆盖正式、样例和 `/Blog/` 子路径；样例文章包含折叠 HTML 与计数按钮，正式构建不含这些演示资源。发布工具通过临时本地 Git 仓库和 bare remote 验证提交、代码隔离、文件修改期间取消、push 失败重试。`npm run check`、`npm run format:check` 与 13 项测试通过。实际仓库创建、Git 鉴权、首次 push 和 [首次 Actions 部署](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 已成功。浏览器验证正式首页、样例 HTML 折叠说明及计数按钮；四个主要公网页面返回 HTTP 200。尚未用作者真实笔记完成一次自动上传；当前没有真实笔记。
