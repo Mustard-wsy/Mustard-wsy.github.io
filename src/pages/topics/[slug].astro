@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import WritingList from '../../components/WritingList.astro';
+import { library } from '../../lib/content';
+import { url } from '../../lib/site';
+export async function getStaticPaths() {
+  const { topics } = await library();
+  return topics.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+const { entry } = Astro.props;
+const { writing } = await library();
+const entries = writing
+  .filter((e) => e.data.topic === entry.data.slug)
+  .sort((a, b) => a.data.topicOrder! - b.data.topicOrder!);
+---
+
+<Base title={entry.data.title} section="writing">
+  <header class="page-heading">
+    <a class="back-link" href={url('/writing/')}>
+      ← 全部文章
+    </a>
+    <p class="eyebrow">专题</p>
+    <h1>{entry.data.title}</h1>
+    <p>{entry.data.description}</p>
+  </header>
+  <WritingList entries={entries} heading="h2" />
+</Base>

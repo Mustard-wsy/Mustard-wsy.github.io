@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+import Mark from '../components/Mark.astro';
+import { site, url, demo } from '../lib/site';
+interface Props {
+  title?: string;
+  description?: string;
+  section?: 'writing' | 'toys' | 'about';
+  home?: boolean;
+}
+const {
+  title,
+  description = site.description,
+  section,
+  home = false,
+} = Astro.props;
+const canonical =
+  Astro.site && !demo ? new URL(Astro.url.pathname, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ? `${title} · ${site.name}` : site.name}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#edf1f8" />
+    {demo && <meta name="robots" content="noindex, nofollow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title || site.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      跳转到正文
+    </a>
+    {demo && (
+      <div class="demo-banner">
+        设计预览 <span>· 样例内容仅用于呈现版式，不会进入正式构建</span>
+      </div>
+    )}
+    <div class="site-shell">
+      {!home && (
+        <header class="site-header">
+          <a class="brand" href={url('/')} aria-label={`${site.name}，首页`}>
+            <Mark />
+            <span>{site.name}</span>
+          </a>
+          <nav aria-label="主导航">
+            {[
+              ['writing', '文章'],
+              ['toys', '玩具'],
+              ['about', '关于'],
+            ].map(([key, label]) => (
+              <a
+                href={url(`/${key}/`)}
+                aria-current={section === key ? 'page' : undefined}
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+        </header>
+      )}
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <span class="footer-name">{site.name}</span>
+        <a href={url('/about/')} class="footer-note">
+          关于 <span aria-hidden="true">↗</span>
+        </a>
+      </footer>
+    </div>
+  </body>
+</html>

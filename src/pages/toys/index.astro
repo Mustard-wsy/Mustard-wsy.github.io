@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import ToyGrid from '../../components/ToyGrid.astro';
+import { library } from '../../lib/content';
+const { toys } = await library();
+---
+
+<Base title="玩具架" section="toys">
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">PROJECTS & TOYS</p>
+      <h1>玩具架</h1>
+      <p>命令行工具、桌面应用，以及其他个人项目。</p>
+    </div>
+  </header>
+  {toys.length ? (
+    <ToyGrid entries={toys} heading="h2" />
+  ) : (
+    <div class="empty-state">
+      <span>暂无项目</span>
+      <p>项目发布后会显示在这里。</p>
+    </div>
+  )}
+</Base>

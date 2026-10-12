@@ -1,0 +1,92 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url, statusLabels, demo } from '../lib/site';
+interface Props {
+  entry: CollectionEntry<'toys'>;
+  heading?: 'h2' | 'h3';
+}
+const { entry, heading: Heading = 'h3' } = Astro.props;
+const { data } = entry;
+const id = `preview-${data.slug}`;
+---
+
+<article class="toy-card pixel-panel">
+  <div class="toy-title">
+    <Heading>
+      <a href={url(`/toys/${data.slug}/`)}>{data.title}</a>
+    </Heading>
+    <span aria-hidden="true">↗</span>
+  </div>
+  {data.cover && (
+    <a class="toy-preview" href={url(`/toys/${data.slug}/`)}>
+      <img
+        src={url(data.cover.src)}
+        alt={data.cover.alt}
+        width="640"
+        height="400"
+        loading="lazy"
+      />
+      {demo && <span class="media-note">示意图</span>}
+    </a>
+  )}
+  <p>{data.description}</p>
+  <div class="toy-meta">
+    <span>{data.tags.join(' · ')}</span>
+    {data.status && <span>{statusLabels[data.status]}</span>}
+    <button hidden data-preview={id} aria-controls={id} aria-haspopup="dialog">
+      速览 +
+    </button>
+  </div>
+</article>
+<dialog id={id} class="toy-dialog" aria-labelledby={`${id}-title`}>
+  <form method="dialog">
+    <button class="close-preview" autofocus aria-label="关闭速览">
+      关闭 ×
+    </button>
+  </form>
+  <p class="eyebrow">玩具架 / 速览</p>
+  <h2 id={`${id}-title`}>{data.title}</h2>
+  {data.cover && (
+    <img
+      src={url(data.cover.src)}
+      alt={data.cover.alt}
+      width="640"
+      height="400"
+    />
+  )}
+  <p>{data.description}</p>
+  <p class="entry-meta">{data.tags.join(' · ')}</p>
+  <a class="pixel-button" href={url(`/toys/${data.slug}/`)}>
+    查看完整项目 ↗
+  </a>
+</dialog>
+<script>
+  document
+    .querySelectorAll<HTMLButtonElement>('[data-preview]')
+    .forEach((button) => {
+      const dialog = document.getElementById(
+        button.dataset.preview!,
+      ) as HTMLDialogElement;
+      if (!dialog || typeof dialog.showModal !== 'function') return;
+      button.hidden = false;
+      button.addEventListener('click', () => {
+        dialog.showModal();
+        document.documentElement.classList.add('preview-open');
+      });
+      dialog.addEventListener('close', () => {
+        document.documentElement.classList.remove('preview-open');
+        button.focus();
+      });
+      dialog.addEventListener('click', (event) => {
+        const rect = dialog.getBoundingClientRect();
+        if (
+          event.target === dialog &&
+          (event.clientX < rect.left ||
+            event.clientX > rect.right ||
+            event.clientY < rect.top ||
+            event.clientY > rect.bottom)
+        )
+          dialog.close();
+      });
+    });
+</script>

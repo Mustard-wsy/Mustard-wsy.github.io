@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, url } from '../lib/site';
+---
+
+<Base home>
+  <div class="workbench">
+    <header class="profile pixel-panel">
+      <div class="profile-avatar" aria-hidden="true">
+        <svg viewBox="0 0 32 32" shape-rendering="crispEdges">
+          <path fill="#35445e" d="M10 4h12v3h4v18h-4v3H8v-3H5V11h5z" />
+          <path fill="#f8fbff" d="M12 7h8v3h3v12h-3v3H9V13h3z" />
+          <path fill="#ef827e" d="M8 21h15v4H8zM12 25h5v6h-5z" />
+          <path fill="#35445e" d="M13 13h2v3h-2zm6 0h2v3h-2z" />
+        </svg>
+      </div>
+      <h1>
+        {site.name}
+        <span class="coral-dot" aria-hidden="true">
+          ·
+        </span>
+      </h1>
+      <p class="profile-intro">{site.introduction}</p>
+      <a class="text-link" href={url('/about/')}>
+        关于我 →
+      </a>
+    </header>
+    <nav class="home-entries" aria-label="主要入口">
+      <a class="home-entry pixel-panel" href={url('/toys/')}>
+        <svg
+          class="entry-icon"
+          viewBox="0 0 32 32"
+          aria-hidden="true"
+          shape-rendering="crispEdges"
+        >
+          <path
+            fill="#e28282"
+            d="M6 5h8v8H6zm14 3h6v5h-6zM8 20h7v6H8zm12-1h6v7h-6z"
+          />
+          <path
+            fill="#35445e"
+            d="M3 14h26v3H3zm0 13h26v3H3zM3 3h3v27H3zm23 0h3v30h-3z"
+          />
+        </svg>
+        <div class="entry-copy">
+          <h2>玩具架</h2>
+          <p>做过的小玩具和实验。</p>
+        </div>
+        <span class="entry-arrow" aria-hidden="true">
+          ↗
+        </span>
+      </a>
+      <a class="home-entry pixel-panel" href={url('/writing/')}>
+        <svg
+          class="entry-icon"
+          viewBox="0 0 32 32"
+          aria-hidden="true"
+          shape-rendering="crispEdges"
+        >
+          <path fill="#bdc6df" d="M7 5h19v23H7z" />
+          <path
+            fill="#35445e"
+            d="M4 2h23v3H4zm0 3h3v23H4zm0 23h23v3H4zM24 5h3v23h-3zM10 10h11v2H10zm0 6h11v2H10z"
+          />
+          <path fill="#e28282" d="M16 22h5v9l-3-2-2 2z" />
+        </svg>
+        <div class="entry-copy">
+          <h2>笔记库</h2>
+          <p>写下的笔记和感兴趣的事。</p>
+        </div>
+        <span class="entry-arrow" aria-hidden="true">
+          ↗
+        </span>
+      </a>
+    </nav>
+  </div>
+</Base>

@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url, displayDate } from '../lib/site';
+interface Props {
+  entries: CollectionEntry<'writing'>[];
+  heading?: 'h2' | 'h3';
+}
+const { entries, heading: Heading = 'h3' } = Astro.props;
+---
+
+<div class="writing-list">
+  {entries.map(({ data }) => (
+    <article class="writing-row">
+      <div class="row-content">
+        <div class="entry-meta">{data.tags.slice(0, 2).join(' / ')}</div>
+        <Heading class="entry-title">
+          <a href={url(`/writing/${data.slug}/`)}>{data.title}</a>
+        </Heading>
+        <p>{data.description}</p>
+      </div>
+      <time datetime={data.publishedAt}>{displayDate(data.publishedAt)}</time>
+      <span class="row-arrow" aria-hidden="true">
+        ↗
+      </span>
+    </article>
+  ))}
+</div>

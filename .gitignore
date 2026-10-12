@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-demo/
+.astro/
+.env
+.env.local
+test-results/
+playwright-report/

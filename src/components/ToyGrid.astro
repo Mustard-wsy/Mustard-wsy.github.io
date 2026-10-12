@@ -1,0 +1,15 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ToyCard from './ToyCard.astro';
+interface Props {
+  entries: CollectionEntry<'toys'>[];
+  heading?: 'h2' | 'h3';
+}
+const { entries, heading = 'h3' } = Astro.props;
+---
+
+<div class="toy-grid">
+  {entries.map((entry) => (
+    <ToyCard entry={entry} heading={heading} />
+  ))}
+</div>
