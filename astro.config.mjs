@@ -44,5 +44,12 @@ export default defineConfig({
     }),
     shikiConfig: { theme: 'github-light' },
   },
-  vite: { define: { 'import.meta.env.PUBLIC_DEMO': JSON.stringify(demo) } },
+  vite: {
+    define: {
+      'import.meta.env.PUBLIC_DEMO': JSON.stringify(demo),
+      'import.meta.env.PUBLIC_LOCAL_PREVIEW': JSON.stringify(
+        process.env.LOCAL_PREVIEW === 'true',
+      ),
+    },
+  },
 });

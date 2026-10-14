@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 490" role="img" aria-labelledby="title desc">
+  <title id="title">OSI七层与因特网五层的对应</title>
+  <desc id="desc">OSI的应用层, 表示层和会话层的相应功能由因特网模型中的应用及相关库承担. 运输层, 网络层, 链路层和物理层分别对应. 此为功能对照, 不表示所有实现都有严格相同的内部边界.</desc>
+  <style>text{font-family:'Segoe UI','Microsoft YaHei',sans-serif;fill:#29364f;font-size:15px}.title{font-size:19px;font-weight:600}.muted{fill:#5d6b82;font-size:12px}.cell{stroke:#35445e;stroke-width:1.3;fill:#f9fbff}.line{stroke:#9aa9c4;stroke-width:1.3;fill:none}</style>
+  <rect x="5" y="7" width="709" height="477" fill="#bdc6df"/>
+  <rect x="1" y="1" width="709" height="477" fill="#edf1f8" stroke="#35445e" stroke-width="1.5"/>
+  <text x="32" y="37" class="title">OSI / 七层参考模型</text><text x="414" y="37" class="title">Internet / 五层模型</text>
+  <g class="cell"><rect x="32" y="59" width="244" height="44"/><rect x="32" y="103" width="244" height="44"/><rect x="32" y="147" width="244" height="44"/><rect x="32" y="204" width="244" height="44"/><rect x="32" y="248" width="244" height="44"/><rect x="32" y="292" width="244" height="44"/><rect x="32" y="336" width="244" height="44"/>
+  <rect x="414" y="59" width="264" height="132" fill="#d6e2f3"/><rect x="414" y="204" width="264" height="44"/><rect x="414" y="248" width="264" height="44"/><rect x="414" y="292" width="264" height="44"/><rect x="414" y="336" width="264" height="44"/></g>
+  <g text-anchor="middle"><text x="154" y="87">应用层 / Application</text><text x="154" y="131">表示层 / Presentation</text><text x="154" y="175">会话层 / Session</text><text x="154" y="232">运输层 / Transport</text><text x="154" y="276">网络层 / Network</text><text x="154" y="320">链路层 / Link</text><text x="154" y="364">物理层 / Physical</text>
+  <text x="546" y="102">应用层 / Application</text><text x="546" y="132" class="muted">应用与相关库承担编码, 加密,</text><text x="546" y="153" class="muted">会话管理等所需功能</text><text x="546" y="232">运输层 / Transport</text><text x="546" y="276">网络层 / Network</text><text x="546" y="320">链路层 / Link</text><text x="546" y="364">物理层 / Physical</text></g>
+  <path class="line" d="M276 81H314L355 125H414M276 125H414M276 169H314L355 125M276 226H414M276 270H414M276 314H414M276 358H414"/>
+  <text x="32" y="422">少列两层, 不表示相应功能消失, 也不表示它们都必须由每个应用实现.</text>
+  <text x="32" y="451" class="muted">这是功能对照, 不是要求所有协议实现都具有完全相同的内部结构.</text>
+</svg>

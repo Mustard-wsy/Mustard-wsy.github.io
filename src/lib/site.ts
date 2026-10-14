@@ -5,6 +5,8 @@ export const site = {
   introduction: '这里放着我的笔记、做过的小实验，还有一些喜欢的东西。',
 };
 export const demo = import.meta.env.PUBLIC_DEMO === true;
+export const localPreview =
+  !demo && import.meta.env.DEV && import.meta.env.PUBLIC_LOCAL_PREVIEW === true;
 export function url(path = '/') {
   return `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 }

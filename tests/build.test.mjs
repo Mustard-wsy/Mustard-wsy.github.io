@@ -2,7 +2,7 @@ import { test, before } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { parseFrontmatter } from '@astrojs/markdown-remark';
 import { verifyBuild } from '../scripts/verify-build.mjs';
 
@@ -22,6 +22,7 @@ before(() => {
         env: {
           ...process.env,
           DEMO_MODE: String(output.demo),
+          LOCAL_PREVIEW: 'true',
           BASE_PATH: output.base,
           SITE_URL: '',
         },
@@ -132,7 +133,10 @@ test('demo includes semantic math, highlighted code, navigation and toy cards', 
   assert.match(article, /class="katex/);
   assert.match(article, /<math/);
   assert.match(article, /class="astro-code/);
-  assert.match(article, /这篇手记的线索/);
+  assert.match(article, /aria-label="文章目录"/);
+  assert.match(article, /aria-labelledby="toc-drawer-title"/);
+  assert.match(article, /aria-controls="article-toc-drawer"/);
+  assert.doesNotMatch(article, /这篇手记的线索/);
   assert.match(article, /noindex, nofollow/);
   assert.match(
     readFileSync(join(output, 'toys/index.html'), 'utf8'),
@@ -206,9 +210,47 @@ test('folders reflect nested paths, hide drafts, preserve article links and shar
       join(outputs[0].dir, 'projects/terminal-fruit-ninja/index.html'),
     ),
   );
-  assert.ok(
-    !existsSync(
-      join(outputs[0].dir, 'writing/collections/计算机网络/index.html'),
-    ),
+});
+
+test('production includes published real articles and their folder ancestors', () => {
+  const root = resolve('content/writing');
+  const publicFolders = new Set();
+  for (const file of files(root).filter((file) => file.endsWith('.md'))) {
+    const { frontmatter } = parseFrontmatter(readFileSync(file, 'utf8'));
+    const article = join(
+      outputs[0].dir,
+      'writing',
+      frontmatter.slug,
+      'index.html',
+    );
+    assert.equal(existsSync(article), !frontmatter.draft, frontmatter.slug);
+    if (frontmatter.draft) continue;
+    let folder = dirname(relative(root, file));
+    while (folder !== '.') {
+      publicFolders.add(folder);
+      folder = dirname(folder);
+    }
+  }
+  for (const folder of publicFolders) {
+    assert.ok(
+      existsSync(
+        join(outputs[0].dir, 'writing/collections', folder, 'index.html'),
+      ),
+      `缺少公开合集：${folder.split(sep).join('/')}`,
+    );
+  }
+});
+
+test('production ignores the local preview flag and excludes real drafts', () => {
+  const output = outputs[0].dir;
+  const drafts = files(resolve('content/writing'))
+    .filter((file) => file.endsWith('.md'))
+    .map((file) => parseFrontmatter(readFileSync(file, 'utf8')).frontmatter)
+    .filter((data) => data.draft);
+  for (const draft of drafts)
+    assert.ok(!existsSync(join(output, 'writing', draft.slug, 'index.html')));
+  assert.doesNotMatch(
+    readFileSync(join(output, 'index.html'), 'utf8'),
+    /本地预览/,
   );
 });

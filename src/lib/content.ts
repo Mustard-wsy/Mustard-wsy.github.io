@@ -2,6 +2,7 @@ import { getCollection } from 'astro:content';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { writingFolders } from './writing-folders.mjs';
+import { localPreview } from './site';
 
 export async function library() {
   const [allWriting, allToys, allProjects, allTopics] = await Promise.all([
@@ -75,10 +76,12 @@ export async function library() {
   ) =>
     b.data.publishedAt.localeCompare(a.data.publishedAt) ||
     a.data.slug.localeCompare(b.data.slug);
-  const writing = allWriting.filter((e) => !e.data.draft).sort(byDate);
+  const writing = allWriting
+    .filter((e) => !e.data.draft || localPreview)
+    .sort(byDate);
   const sortWorks = (entries: typeof allToys | typeof allProjects) =>
     entries
-      .filter((e) => !e.data.draft)
+      .filter((e) => !e.data.draft || localPreview)
       .sort(
         (a, b) =>
           (a.data.featuredOrder ?? Infinity) -

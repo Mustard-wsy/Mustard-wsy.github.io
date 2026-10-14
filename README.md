@@ -18,6 +18,7 @@ npm run dev:demo
 | 命令                    | 用途                                                             |
 | ----------------------- | ---------------------------------------------------------------- |
 | `npm run dev:demo`      | 有样例内容的视觉开发预览                                         |
+| `npm run dev:local`     | 本机查看真实内容与草稿，不提交或上传                             |
 | `npm run dev`           | 仅使用 `content/` 中的正式内容                                   |
 | `npm run check`         | Astro 与 TypeScript 检查                                         |
 | `npm run build`         | 正式构建，输出 `dist/`                                           |
@@ -31,7 +32,7 @@ npm run dev:demo
 | `npm run publish:notes` | 单次检查、提交并上传内容（需先连接仓库）                         |
 | `npm run verify:build`  | 检查 `dist/` 中的站内链接和资源                                  |
 
-目前尚未录入作者的正式文章、玩具与项目，因此正式模式的列表为空。这是预期行为；新增内容的字段见[内容指南](docs/04-content-guide.md)。关于页文本根据对话整理，正式发布前应复核。
+计算机网络前三章笔记及配图、字段交互已迁入，并设为公开内容；玩具与项目尚未录入。使用 `npm run dev` 可查看公开文章，`npm run dev:local` 还包含草稿。最新发布验证见[实施记录](docs/07-implementation-status.md)。新增内容的字段见[内容指南](docs/04-content-guide.md)。关于页文本根据对话整理，正式发布前应复核。
 
 ## 修改入口
 
@@ -81,3 +82,5 @@ npm run dev:demo
 文章库按 `content/writing/` 的实际文件夹层级生成合集与下级索引；每个目录可放 `_collection.json` 配置标题、简介、Logo 和排序，参考 `templates/collection.json`。中文文件夹名可用，文章详情仍使用原 slug 地址。空目录与仅草稿目录隐藏。
 
 项目放在 `content/projects/`，模板为 `templates/project.md`，与玩具共用卡片、速览、详情和内容字段。合集配置、项目文件与资源都包含在现有自动发布监测范围内。
+
+本地预览首篇笔记的逐步操作见[先在本地查看](docs/08-publishing.md#先在本地查看不上传)。保持 `draft: true`，运行 `npm run dev:local`；仅预览时不要启动发布监测程序。

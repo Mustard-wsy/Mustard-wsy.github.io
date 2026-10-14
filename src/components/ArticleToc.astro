@@ -1,0 +1,161 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+const { headings } = Astro.props;
+---
+
+<aside class="toc" data-article-toc>
+  <div class="toc-sidebar">
+    <h2>目录</h2>
+    <nav aria-label="文章目录" class="toc-links">
+      <ol>
+        {headings.map((heading, index) => (
+          <li class:list={{ nested: heading.depth === 3 }}>
+            <a href={`#${heading.slug}`}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </div>
+  <button
+    class="toc-toggle"
+    type="button"
+    aria-controls="article-toc-drawer"
+    aria-expanded="false"
+    aria-haspopup="dialog"
+    aria-label="打开目录"
+    title="打开目录"
+    hidden
+  >
+    <span class="toc-symbol" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M2 3h2v2H2zM2 7h2v2H2zM2 11h2v2H2z" fill="currentColor" />
+        <path d="M6 4h8M6 8h8M6 12h8" stroke="currentColor" stroke-width="2" />
+      </svg>
+    </span>
+  </button>
+  <dialog
+    class="toc-drawer"
+    id="article-toc-drawer"
+    aria-labelledby="toc-drawer-title"
+  >
+    <div class="toc-drawer-heading">
+      <h2 id="toc-drawer-title">目录</h2>
+      <button
+        class="toc-close"
+        type="button"
+        aria-label="关闭目录"
+        title="关闭目录"
+      >
+        <span class="toc-symbol" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+            <path
+              d="m4 4 8 8M12 4l-8 8"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div class="toc-drawer-content"></div>
+  </dialog>
+</aside>
+
+<script>
+  const toc = document.querySelector<HTMLElement>('[data-article-toc]');
+  if (toc) {
+    const sidebar = toc.querySelector<HTMLElement>('.toc-sidebar')!;
+    const nav = toc.querySelector<HTMLElement>('.toc-links')!;
+    const trigger = toc.querySelector<HTMLButtonElement>('.toc-toggle')!;
+    const drawer = toc.querySelector<HTMLDialogElement>('.toc-drawer')!;
+    const slot = toc.querySelector<HTMLElement>('.toc-drawer-content')!;
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a')];
+    const sections = links.map((link) =>
+      document.getElementById(decodeURIComponent(link.hash.slice(1))),
+    );
+    const narrow = window.matchMedia('(max-width: 850px)');
+    let previousOverflow = '';
+    let active = -1;
+    let pending = false;
+
+    const revealCurrent = () => {
+      const link = links[active];
+      if (!link) return;
+      const area = nav.getBoundingClientRect();
+      const item = link.getBoundingClientRect();
+      if (item.top < area.top || item.bottom > area.bottom) {
+        nav.scrollTop +=
+          item.top - area.top - area.height / 2 + item.height / 2;
+      }
+    };
+    const updateCurrent = () => {
+      pending = false;
+      let current = -1;
+      sections.forEach((heading, index) => {
+        if (heading && heading.getBoundingClientRect().top <= 120)
+          current = index;
+      });
+      if (current === active) return;
+      active = current;
+      links.forEach((link, index) => {
+        if (index === active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+      if (!narrow.matches || drawer.open) revealCurrent();
+    };
+    const scheduleUpdate = () => {
+      if (!pending) {
+        pending = true;
+        requestAnimationFrame(updateCurrent);
+      }
+    };
+    const close = () => {
+      if (drawer.open) drawer.close();
+    };
+    drawer.addEventListener('close', () => {
+      document.documentElement.style.overflow = previousOverflow;
+      trigger.setAttribute('aria-expanded', 'false');
+      if (narrow.matches) trigger.focus({ preventScroll: true });
+    });
+    trigger.addEventListener('click', () => {
+      previousOverflow = document.documentElement.style.overflow;
+      drawer.showModal();
+      document.documentElement.style.overflow = 'hidden';
+      trigger.setAttribute('aria-expanded', 'true');
+      revealCurrent();
+    });
+    toc.querySelector('.toc-close')!.addEventListener('click', close);
+    drawer.addEventListener('click', (event) => {
+      if (event.target !== drawer) return;
+      const rect = drawer.getBoundingClientRect();
+      if (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+      )
+        close();
+    });
+    nav.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) close();
+    });
+    const updateLayout = () => {
+      close();
+      (narrow.matches ? slot : sidebar).append(nav);
+      trigger.hidden = !narrow.matches;
+      toc.classList.toggle('toc-enhanced', narrow.matches);
+      scheduleUpdate();
+    };
+    narrow.addEventListener('change', updateLayout);
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    window.addEventListener('hashchange', scheduleUpdate);
+    window.addEventListener('load', scheduleUpdate);
+    updateLayout();
+  }
+</script>

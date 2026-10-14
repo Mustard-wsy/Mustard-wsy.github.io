@@ -1,0 +1,185 @@
+/* Shared by ordinary Markdown articles. No framework or global selectors. */
+.net-fields {
+  --nf-bg: var(--bg, #edf1f8);
+  --nf-panel: #f9fbff;
+  --nf-text: var(--text, #29364f);
+  --nf-muted: var(--muted, #5d6b82);
+  --nf-ink: var(--ink, #35445e);
+  --nf-accent: var(--accent, #ae494f);
+  --nf-shadow: var(--shadow, #bdc6df);
+  margin: 28px 0;
+  color: var(--nf-text);
+  font-family: var(--sans, 'Segoe UI', 'Microsoft YaHei', sans-serif);
+  line-height: 1.7;
+  isolation: isolate;
+}
+.net-fields *,
+.net-fields *::before,
+.net-fields *::after {
+  box-sizing: border-box;
+}
+.net-fields .nf-heading {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 650;
+}
+.net-fields .nf-hint,
+.net-fields figcaption {
+  margin: 4px 0 14px;
+  font-size: 13px;
+  color: var(--nf-muted);
+}
+.net-fields .nf-scroll {
+  overflow-x: auto;
+  padding: 4px 5px 9px 0;
+  scrollbar-width: thin;
+}
+.net-fields .nf-sheet {
+  border: 2px solid var(--nf-ink);
+  background: var(--nf-panel);
+  box-shadow: 4px 4px 0 var(--nf-shadow);
+}
+.net-fields .nf-http {
+  min-width: 630px;
+}
+.net-fields .nf-tcp {
+  min-width: 640px;
+}
+.net-fields .nf-static {
+  display: block;
+  width: 100%;
+  min-width: 640px;
+  max-width: none;
+  height: auto;
+}
+.net-fields .nf-row {
+  display: flex;
+}
+.net-fields .nf-row + .nf-row {
+  border-top: 1px solid var(--nf-ink);
+}
+.net-fields .nf-field {
+  appearance: none;
+  border: 0;
+  border-right: 1px solid var(--nf-ink);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  flex: var(--span, 1) 1 0;
+  min-width: 0;
+  min-height: 52px;
+  padding: 11px 7px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 140ms ease;
+}
+.net-fields .nf-field:last-child {
+  border-right: 0;
+}
+.net-fields .nf-http .nf-token {
+  flex: 0 0 44px;
+  font-size: 12px;
+}
+.net-fields .nf-field small {
+  display: block;
+  color: var(--nf-muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+.net-fields .nf-field:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.net-fields .nf-field[aria-pressed='true'] {
+  background: #f5e4e8;
+  box-shadow: inset 0 -3px 0 var(--nf-accent);
+}
+.net-fields .nf-field:focus-visible {
+  outline: 3px solid var(--nf-accent);
+  outline-offset: -4px;
+  z-index: 1;
+}
+.net-fields .nf-row-label {
+  margin: 0;
+  padding: 5px 10px;
+  background: var(--nf-bg);
+  color: var(--nf-muted);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--nf-ink);
+}
+.net-fields .nf-spacer {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--nf-muted);
+  border-top: 1px solid var(--nf-ink);
+}
+.net-fields .nf-tcp .nf-row {
+  display: grid;
+  grid-template-columns: repeat(32, minmax(0, 1fr));
+}
+.net-fields .nf-tcp .nf-field {
+  grid-column: span var(--span);
+}
+.net-fields .nf-ruler {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  font: 11px/1.5 var(--mono, Consolas, monospace);
+  color: var(--nf-muted);
+  background: var(--nf-bg);
+  border-bottom: 1px solid var(--nf-ink);
+}
+.net-fields .nf-detail {
+  border-top: 2px solid var(--nf-ink);
+  background: var(--nf-bg);
+  padding: 18px 20px;
+  margin-top: 13px;
+  min-block-size: 190px;
+}
+.net-fields .nf-detail-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+}
+.net-fields .nf-detail-title {
+  font-size: 16px;
+  font-weight: 650;
+}
+.net-fields .nf-detail-size {
+  font: 12px/1.6 var(--mono, Consolas, monospace);
+  color: var(--nf-muted);
+}
+.net-fields .nf-detail p {
+  font-size: 14px;
+  margin: 10px 0 0;
+}
+.net-fields .nf-example {
+  color: var(--nf-accent);
+  overflow-wrap: anywhere;
+}
+.net-fields noscript {
+  display: block;
+  font-size: 13px;
+  color: var(--nf-muted);
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .net-fields {
+    margin: 23px 0;
+  }
+  .net-fields .nf-detail {
+    padding: 15px;
+    min-block-size: 225px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .net-fields .nf-field {
+    transition: none;
+  }
+}

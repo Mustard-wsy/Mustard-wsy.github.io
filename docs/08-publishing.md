@@ -32,9 +32,62 @@ git push -u origin main
 
 `.github/workflows/pages.yml` 会在 `main` 收到提交时检查 Astro、构建正式内容、校验生成的内链与资源，再部署 `dist/`。仅使用 `content/`、`public/`，不会发布 fixtures 样例。构建失败不进行新的部署，原网站保留。
 
-当前没有真实文章、玩具与专题，首次部署会展示首页入口和内容页空状态。RSS 与站点图尚未补齐。
+首次部署时没有真实文章、玩具与专题，正式站展示首页入口和内容页空状态；首篇真实笔记已在本地配置为草稿，尚未上传。RSS 与站点图尚未补齐。
+
+## 先在本地查看（不上传）
+
+在网站目录运行：
+
+```powershell
+npm run dev:local
+```
+
+这个命令读取 `content/` 与 `public/`，包括 `draft: true` 的草稿，顶部显示“本地预览”。浏览器打开终端给出的 `127.0.0.1` 地址。它只启动本机服务器，不执行 Git 提交、push 或部署。Ctrl+C 停止。不要同时运行 `publish:watch` 或 `publish:notes`，这两个命令会上传文件，包括草稿源文件。
+
+目前的本地笔记示例为 `content/writing/计算机网络/第1章_网络概述.md`：
+
+```yaml
+---
+title: '网络概述 Introduction'
+slug: 'network-01'
+description: '概括文章讨论的内容。'
+publishedAt: '2026-10-13'
+draft: true
+tags: ['计算机网络', '课程笔记']
+---
+## 1.1 因特网、协议与服务
+
+正文从这里开始。
+```
+
+配置流程：
+
+1. 把 `.md` 复制到 `content/writing/`，放在哪个文件夹就归属哪个合集。
+2. 在文件最上方加入两行 `---` 包围的 YAML 元数据。title 是页面标题；slug 是稳定的文章地址，整个文章库内不可重复，只能用小写英文字母、数字和短横线（例如 `network-01`，不能写 `Network_01`），修改后访问地址也会改变；description 显示在文章列表；publishedAt 是计划发布日期，公开前改成实际日期；draft 保持 true；tags 可选。
+3. 正文不用重复一级标题，因为页面会从 title 自动显示标题。保留 `##`、`###` 章节即可。
+4. 合集默认使用文件夹名；需要名称、简介或 Logo 时添加 `_collection.json`。Logo 可省略，不必准备图片才能看文章。
+5. 运行 `npm run dev:local`，从首页进入文章库 → 计算机网络 → 对应文章，也可直接打开 `/writing/network-01/`。
+6. 修改并保存 Markdown，浏览器会更新；需要检查内容与代码配置时运行 `npm run check`。
+
+`dev:local` 是真实内容及草稿预览，`dev:demo` 是 fixtures 样例预览，`dev` 只显示非草稿的真实内容。正式 `npm run build` 始终排除草稿，即使环境中遗留 `LOCAL_PREVIEW=true`。这个预览开关不会写进文章字段；今后准备发布时再把 draft 改为 false，并单独执行发布流程。
 
 ## 日常写作与上传
+
+### 已迁入的计算机网络笔记
+
+2026-10-14 已将外部 Notes 中的前三章同步到本地网站，保持 `draft: true`，未提交或上传。第一章沿用原有元数据、`network-01` 地址及日期；第二、三章使用 `network-02`、`network-03`，日期暂填迁入日期，公开时应改成实际发布日期。正文去掉重复一级标题，图片和 HTTP/TCP 字段图沿用原内容与逻辑路径。
+
+| 网站文件                                       | 用途                                         |
+| ---------------------------------------------- | -------------------------------------------- |
+| `content/writing/计算机网络/第1章_网络概述.md` | 网络概述，地址 `/writing/network-01/`        |
+| `content/writing/计算机网络/第2章_应用层.md`   | 应用层，地址 `/writing/network-02/`          |
+| `content/writing/计算机网络/第3章_运输层.md`   | 运输层，地址 `/writing/network-03/`          |
+| `public/media/network-01/`                     | 第一章的 2 张 PNG 和 2 张 SVG                |
+| `public/media/network-notes/`                  | 字段图共享 CSS 与 JavaScript，仅相关文章引用 |
+
+本地阅读只需 `npm run dev:local`，从文章库进入计算机网络合集。外部 Notes 中的说明、模板和预览工具无需复制进文章库；图片和交互资源合计约 250 KB，没有引入新的框架或依赖。迁移前网站的第一章副本保留在 Git 忽略的 `test-results/migration-backup-2026-10-14/`，外部源文件未修改。
+
+后续若继续在外部 Notes 写作：复制对应章的正文到网站同名文章，保留网站文首字段，去掉外部笔记的一级标题；新增资源复制到 `public/media/`，正文继续用 `/media/...`。若直接在网站副本编辑，则不需要重复迁移。两边不会自动同步，复制前应确认哪份是最新内容。
 
 在外部编辑器与笔记目录完成写作，再复制到：
 
@@ -86,7 +139,7 @@ npm run publish:notes
 
 ## 验证范围
 
-本地构建覆盖正式、样例和 `/Blog/` 子路径；样例文章包含折叠 HTML 与计数按钮，正式构建不含这些演示资源。发布工具通过临时本地 Git 仓库和 bare remote 验证提交、代码隔离、文件修改期间取消、push 失败重试。`npm run check`、`npm run format:check` 与 13 项测试通过。实际仓库创建、Git 鉴权、首次 push 和 [首次 Actions 部署](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 已成功。浏览器验证正式首页、样例 HTML 折叠说明及计数按钮；四个主要公网页面返回 HTTP 200。尚未用作者真实笔记完成一次自动上传；当前没有真实笔记。
+本地构建覆盖正式、样例和 `/Blog/` 子路径；样例文章包含折叠 HTML 与计数按钮，正式构建不含这些演示资源。发布工具通过临时本地 Git 仓库和 bare remote 验证提交、代码隔离、文件修改期间取消、push 失败重试。`npm run check`、`npm run format:check` 与 13 项测试通过。实际仓库创建、Git 鉴权、首次 push 和 [首次 Actions 部署](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 已成功。浏览器验证正式首页、样例 HTML 折叠说明及计数按钮；四个主要公网页面返回 HTTP 200。尚未用作者真实笔记完成一次自动上传；首篇真实笔记目前只在本地预览。
 
 ## 合集与项目的上传
 

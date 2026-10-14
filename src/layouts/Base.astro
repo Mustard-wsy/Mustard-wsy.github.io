@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import Mark from '../components/Mark.astro';
-import { site, url, demo } from '../lib/site';
+import { site, url, demo, localPreview } from '../lib/site';
 interface Props {
   title?: string;
   description?: string;
@@ -15,7 +15,9 @@ const {
   home = false,
 } = Astro.props;
 const canonical =
-  Astro.site && !demo ? new URL(Astro.url.pathname, Astro.site) : undefined;
+  Astro.site && !demo && !localPreview
+    ? new URL(Astro.url.pathname, Astro.site)
+    : undefined;
 ---
 
 <!doctype html>
@@ -26,7 +28,9 @@ const canonical =
     <title>{title ? `${title} · ${site.name}` : site.name}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#edf1f8" />
-    {demo && <meta name="robots" content="noindex, nofollow" />}
+    {(demo || localPreview) && (
+      <meta name="robots" content="noindex, nofollow" />
+    )}
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:title" content={title || site.name} />
     <meta property="og:description" content={description} />
@@ -41,6 +45,11 @@ const canonical =
     {demo && (
       <div class="demo-banner">
         设计预览 <span>· 样例内容仅用于呈现版式，不会进入正式构建</span>
+      </div>
+    )}
+    {localPreview && (
+      <div class="demo-banner">
+        本地预览 <span>· 包含草稿，仅供本机查看；不会自动上传</span>
       </div>
     )}
     <div class="site-shell">

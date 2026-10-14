@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ArticleToc from '../../components/ArticleToc.astro';
 import { library } from '../../lib/content';
 import { folderPath, folderLink } from '../../lib/writing-folders.mjs';
 import { resolve } from 'node:path';
@@ -49,23 +50,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
       </div>
     </header>
     <div class="reading-layout">
-      {toc.length >= 3 && (
-        <aside class="toc">
-          <details open>
-            <summary>这篇手记的线索</summary>
-            <ol>
-              {toc.map((h, index) => (
-                <li class:list={{ nested: h.depth === 3 }}>
-                  <a href={`#${h.slug}`}>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </details>
-        </aside>
-      )}
+      {toc.length >= 3 && <ArticleToc headings={toc} />}
       <div class="prose">
         <Content />
       </div>

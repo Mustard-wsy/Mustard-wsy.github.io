@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "publish:notes": "node scripts/publish.mjs",
     "publish:watch": "node scripts/publish.mjs --watch",
-    "verify:build": "node scripts/verify-build.mjs"
+    "verify:build": "node scripts/verify-build.mjs",
+    "dev:local": "cross-env DEMO_MODE=false LOCAL_PREVIEW=true astro dev --host 127.0.0.1"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.2",
