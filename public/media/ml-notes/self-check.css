@@ -1,0 +1,48 @@
+/* Scoped to note answers; no site-wide typography or color changes. */
+.ml-answer {
+  display: block;
+  width: 100%;
+  margin: 0.65rem 0 1.15rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #34363b;
+  border-radius: 0.25rem;
+  background: #202124;
+  color: #f4f4f5;
+  font: inherit;
+  line-height: 1.8;
+  text-align: left;
+  cursor: help;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ml-answer .ml-answer-text {
+  display: block;
+  opacity: 0;
+  user-select: none;
+}
+
+.ml-answer[data-revealed='true'] .ml-answer-text,
+.ml-answer:not([data-ready]):hover .ml-answer-text,
+.ml-answer:not([data-ready]):focus-visible .ml-answer-text {
+  opacity: 1;
+  user-select: text;
+}
+
+.ml-answer:focus-visible {
+  outline: 2px solid #719cff;
+  outline-offset: 3px;
+}
+
+/* Printed revision sheets should retain their answers. */
+@media print {
+  .ml-answer {
+    background: transparent;
+    color: #111;
+    border-color: #999;
+    break-inside: avoid;
+  }
+  .ml-answer .ml-answer-text {
+    opacity: 1;
+    user-select: text;
+  }
+}

@@ -3,6 +3,7 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
+import { codeWrapTransformer } from './src/lib/code-wrap.mjs';
 
 const demo = process.env.DEMO_MODE === 'true';
 const base = process.env.BASE_PATH || '/';
@@ -42,7 +43,10 @@ export default defineConfig({
       remarkPlugins: [remarkMath],
       rehypePlugins: [rehypeRaw, rehypeKatex, contentUrls],
     }),
-    shikiConfig: { theme: 'github-light' },
+    shikiConfig: {
+      theme: 'github-light',
+      transformers: [codeWrapTransformer],
+    },
   },
   vite: {
     define: {

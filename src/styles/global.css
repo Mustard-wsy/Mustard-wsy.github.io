@@ -722,6 +722,11 @@ nav a[aria-current='page']:after {
   background: var(--surface) !important;
   margin: 25px 0;
 }
+.prose pre[data-code-wrap='true'],
+.prose pre[data-code-wrap='true'] code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .prose code {
   font-family: var(--mono);
   font-size: 0.83em;
