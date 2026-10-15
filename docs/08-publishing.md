@@ -32,7 +32,7 @@ git push -u origin main
 
 `.github/workflows/pages.yml` 会在 `main` 收到提交时检查 Astro、构建正式内容、校验生成的内链与资源，再部署 `dist/`。仅使用 `content/`、`public/`，不会发布 fixtures 样例。构建失败不进行新的部署，原网站保留。
 
-首次部署时没有真实文章、玩具与专题，正式站展示首页入口和内容页空状态；首篇真实笔记已在本地配置为草稿，尚未上传。RSS 与站点图尚未补齐。
+首次部署时没有真实文章、玩具与专题，正式站展示首页入口和内容页空状态。2026-10-15 已手动提交发布计算机网络前三章，配图和字段交互资源同步上线；部署与验证详情见实施记录。RSS 与站点图尚未补齐。
 
 ## 先在本地查看（不上传）
 
@@ -139,7 +139,7 @@ npm run publish:notes
 
 ## 验证范围
 
-本地构建覆盖正式、样例和 `/Blog/` 子路径；样例文章包含折叠 HTML 与计数按钮，正式构建不含这些演示资源。发布工具通过临时本地 Git 仓库和 bare remote 验证提交、代码隔离、文件修改期间取消、push 失败重试。`npm run check`、`npm run format:check` 与 13 项测试通过。实际仓库创建、Git 鉴权、首次 push 和 [首次 Actions 部署](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 已成功。浏览器验证正式首页、样例 HTML 折叠说明及计数按钮；四个主要公网页面返回 HTTP 200。尚未用作者真实笔记完成一次自动上传；首篇真实笔记目前只在本地预览。
+本地构建覆盖正式、样例和 `/Blog/` 子路径；样例文章包含折叠 HTML 与计数按钮，正式构建不含这些演示资源。发布工具通过临时本地 Git 仓库和 bare remote 验证提交、代码隔离、文件修改期间取消、push 失败重试。最新 `npm run check`、`npm run format:check` 与 18 项测试通过。实际仓库创建、Git 鉴权、首次 push 和 [首次 Actions 部署](https://github.com/Mustard-wsy/Mustard-wsy.github.io/actions/runs/38229055198) 已成功。计算机网络前三章已手动提交上线，文章与配套资源通过公网 HTTP 检查；尚未用作者真实笔记完成一次持续监测自动上传。Pages 若在 `updating_pages` 超时，先查看日志；本次仅重试失败的部署作业即成功，不需要重新复制或修改笔记。
 
 ## 合集与项目的上传
 
