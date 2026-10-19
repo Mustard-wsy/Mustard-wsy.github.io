@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { url, displayDate } from '../lib/site';
+import { url } from '../lib/site';
+import PublicationDate from './PublicationDate.astro';
 interface Props {
   entries: CollectionEntry<'writing'>[];
   heading?: 'h2' | 'h3';
@@ -18,7 +19,7 @@ const { entries, heading: Heading = 'h3' } = Astro.props;
         </Heading>
         <p>{data.description}</p>
       </div>
-      <time datetime={data.publishedAt}>{displayDate(data.publishedAt)}</time>
+      <PublicationDate data={data} />
       <span class="row-arrow" aria-hidden="true">
         ↗
       </span>

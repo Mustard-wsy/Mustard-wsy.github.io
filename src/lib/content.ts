@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { writingFolders } from './writing-folders.mjs';
 import { localPreview } from './site';
+import { byPublicationDate } from './publication-date.mjs';
 
 export async function library() {
   const [allWriting, allToys, allProjects, allTopics] = await Promise.all([
@@ -28,9 +29,13 @@ export async function library() {
       'slug',
     );
     for (const { data } of entries) {
-      if (data.updatedAt && data.updatedAt < data.publishedAt)
+      if (
+        data.updatedAt &&
+        data.publishedAt &&
+        data.updatedAt < data.publishedAt
+      )
         throw new Error(`${data.slug}: 更新日期早于发布日期`);
-      if (!data.draft && data.publishedAt > today)
+      if (!data.draft && data.publishedAt && data.publishedAt > today)
         throw new Error(`${data.slug}: 公开内容不能使用未来日期`);
     }
   }
@@ -70,12 +75,7 @@ export async function library() {
         throw new Error(`${data.slug}: 媒体不存在 ${path}`);
     }
   }
-  const byDate = (
-    a: { data: { publishedAt: string; slug: string } },
-    b: typeof a,
-  ) =>
-    b.data.publishedAt.localeCompare(a.data.publishedAt) ||
-    a.data.slug.localeCompare(b.data.slug);
+  const byDate = byPublicationDate;
   const writing = allWriting
     .filter((e) => !e.data.draft || localPreview)
     .sort(byDate);

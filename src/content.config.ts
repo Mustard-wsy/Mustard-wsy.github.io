@@ -1,25 +1,18 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
+import {
+  publicationFields,
+  validatePublicationDate,
+} from './lib/publication-date.mjs';
 
 const root = process.env.DEMO_MODE === 'true' ? './fixtures' : './content';
 const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-const date = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/)
-  .refine((value) => {
-    const parsed = new Date(`${value}T00:00:00Z`);
-    return (
-      !Number.isNaN(parsed.valueOf()) &&
-      parsed.toISOString().slice(0, 10) === value
-    );
-  }, '日期必须有效');
 const common = {
   title: z.string().min(1),
   slug,
   description: z.string().min(1),
-  publishedAt: date,
-  updatedAt: date.optional(),
+  ...publicationFields,
   draft: z.boolean(),
   tags: z.array(z.string()).default([]),
 };
@@ -31,35 +24,39 @@ const https = z
   .url()
   .refine((url) => url.startsWith('https://'), '链接必须使用 HTTPS');
 
-const workSchema = z.object({
-  ...common,
-  status: z.enum(['in-progress', 'completed', 'paused']).optional(),
-  featuredOrder: z.number().int().positive().optional(),
-  cover: z.object({ src: localMedia, alt: z.string().min(1) }).optional(),
-  video: z
-    .object({
-      src: localMedia,
-      poster: localMedia.optional(),
-      description: z.string().min(1),
-    })
-    .optional(),
-  links: z
-    .object({
-      source: https.optional(),
-      demo: https.optional(),
-      download: https.optional(),
-    })
-    .optional(),
-});
+const workSchema = z
+  .object({
+    ...common,
+    status: z.enum(['in-progress', 'completed', 'paused']).optional(),
+    featuredOrder: z.number().int().positive().optional(),
+    cover: z.object({ src: localMedia, alt: z.string().min(1) }).optional(),
+    video: z
+      .object({
+        src: localMedia,
+        poster: localMedia.optional(),
+        description: z.string().min(1),
+      })
+      .optional(),
+    links: z
+      .object({
+        source: https.optional(),
+        demo: https.optional(),
+        download: https.optional(),
+      })
+      .optional(),
+  })
+  .superRefine(validatePublicationDate);
 
 export const collections = {
   writing: defineCollection({
     loader: glob({ pattern: '**/*.md', base: `${root}/writing` }),
-    schema: z.object({
-      ...common,
-      topic: slug.optional(),
-      topicOrder: z.number().int().positive().optional(),
-    }),
+    schema: z
+      .object({
+        ...common,
+        topic: slug.optional(),
+        topicOrder: z.number().int().positive().optional(),
+      })
+      .superRefine(validatePublicationDate),
   }),
   toys: defineCollection({
     loader: glob({ pattern: '**/*.md', base: `${root}/toys` }),

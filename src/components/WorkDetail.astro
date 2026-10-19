@@ -1,7 +1,8 @@
 ---
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { url, displayDate, statusLabels } from '../lib/site';
+import { url, statusLabels } from '../lib/site';
+import PublicationDate from './PublicationDate.astro';
 import type { CollectionEntry } from 'astro:content';
 interface Props {
   entry: CollectionEntry<'toys' | 'projects'>;
@@ -23,7 +24,7 @@ const labels = { source: '查看源码', demo: '打开演示', download: '下载
     <h1>{data.title}</h1>
     <p class="article-deck">{data.description}</p>
     <div class="article-meta">
-      <time datetime={data.publishedAt}>{displayDate(data.publishedAt)}</time>
+      <PublicationDate data={data} />
       {data.status && <span>{statusLabels[data.status]}</span>}
     </div>
   </header>

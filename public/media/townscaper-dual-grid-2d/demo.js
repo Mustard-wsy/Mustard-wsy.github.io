@@ -22,7 +22,7 @@ function initMask(root) {
   function render() {
     const type = classify(mask);
     visual.innerHTML = tileSvg(mask);
-    status.textContent = `掩码 ${mask.toString(2).padStart(4, '0')}（${mask}） · ${type.name} · 基础素材顺时针旋转 ${type.turns * 90}°`;
+    status.textContent = `掩码 ${mask.toString(2).padStart(4, '0')}(${mask}) · ${type.name} · 基础素材顺时针旋转 ${type.turns * 90}°`;
     root.querySelectorAll('[data-corner]').forEach((button) => {
       const value = (mask >> Number(button.dataset.corner)) & 1;
       button.textContent = String(value);
@@ -60,11 +60,11 @@ function initMeshes(geometry, terrain) {
   let triangles, merged, divided, finalMesh, states, incident;
   let selected = 0;
   const stageDescriptions = [
-    '只布点：三组方向等距排列，外轮廓是六边形。',
-    '连成三角形：每个面都很规则，方便找到可合并的邻居。',
-    '随机合并：移除配对三角形的共享边，允许剩余三角形存在。',
-    '统一细分：三角形变 3 块，四边形变 4 块，所有面现在都有四条边。',
-    '固定边界，内部顶点向邻居平均位置移动；连接关系保持不变。',
+    '只布点: 三组方向等距排列, 外轮廓是六边形.',
+    '连成三角形: 每个面都很规则, 方便找到可合并的邻居.',
+    '随机合并: 移除配对三角形的共享边, 允许剩余三角形存在.',
+    '统一细分: 三角形变 3 块, 四边形变 4 块, 所有面现在都有四条边.',
+    '固定边界, 内部顶点向邻居平均位置移动; 连接关系保持不变.',
   ];
   function renderGeometry() {
     const stage = Number(stageInput.value);
@@ -102,7 +102,7 @@ function initMeshes(geometry, terrain) {
     });
     const affected = incident[selected].length;
     get(terrain, 'output').textContent =
-      `${message}顶点 #${selected}：${states[selected] ? '陆地' : '水'}；关联 ${affected} 块地形（红框）。`;
+      `${message}顶点 #${selected}:${states[selected] ? '陆地' : '水'}; 关联 ${affected} 块地形(红框).`;
   }
   function regenerate() {
     let seed = Math.trunc(Number(seedInput.value));
@@ -122,14 +122,14 @@ function initMeshes(geometry, terrain) {
       0,
     );
     renderGeometry();
-    renderTerrain('已生成网格。');
+    renderTerrain('已生成网格.');
   }
   stageInput.addEventListener('change', renderGeometry);
   relaxInput.addEventListener('input', () => {
     // Always recalculate from the same unsubdued mesh; do not accumulate slider history.
     finalMesh = relax(divided, Number(relaxInput.value));
     renderGeometry();
-    renderTerrain('已调整形状，保留海陆状态。');
+    renderTerrain('已调整形状, 保留海陆状态.');
   });
   mergeInput.addEventListener('input', regenerate);
   get(geometry, '[data-generate]').addEventListener('click', regenerate);
@@ -138,7 +138,7 @@ function initMeshes(geometry, terrain) {
     if (vertex) {
       selected = Number(vertex.dataset.vertex);
       states[selected] ^= 1;
-      renderTerrain('已翻转。');
+      renderTerrain('已翻转.');
       return;
     }
     const action = event.target.closest('[data-action]')?.dataset.action;
@@ -147,10 +147,10 @@ function initMeshes(geometry, terrain) {
     if (action === 'island') states = islandStates(finalMesh);
     renderTerrain(
       action === 'clear'
-        ? '已设为全水。'
+        ? '已设为全水.'
         : action === 'island'
-          ? '已恢复示例岛屿。'
-          : '已翻转。',
+          ? '已恢复示例岛屿.'
+          : '已翻转.',
     );
   });
   for (const checkbox of terrain.querySelectorAll('input[type="checkbox"]'))

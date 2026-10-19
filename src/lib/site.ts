@@ -1,8 +1,8 @@
 export const site = {
   name: 'mustard-wiki',
   role: '笔记 · 实验 · 喜欢的东西',
-  description: '记录自己的笔记、实验和一些喜欢的东西。',
-  introduction: '这里放着我的笔记、做过的小实验，还有一些喜欢的东西。',
+  description: '记录自己的笔记, 实验和一些喜欢的东西.',
+  introduction: '这里放着我的笔记, 做过的小实验, 还有一些喜欢的东西.',
 };
 export const demo = import.meta.env.PUBLIC_DEMO === true;
 export const localPreview =

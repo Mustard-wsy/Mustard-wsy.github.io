@@ -1,0 +1,125 @@
+.as-lab {
+  margin: 2rem 0;
+  padding: clamp(12px, 3vw, 24px);
+  border: 2px solid #35445e;
+  background: #f9fbff;
+  box-shadow: 4px 4px 0 #bdc6df;
+  color: #29364f;
+}
+.as-lab * {
+  box-sizing: border-box;
+}
+.as-lab [hidden] {
+  display: none !important;
+}
+.as-lab .as-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.as-lab p,
+.as-frontier {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.as-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+}
+.as-controls label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.as-lab button,
+.as-lab select {
+  font: inherit;
+  color: #29364f;
+  background: #edf1f8;
+  border: 1px solid #35445e;
+  border-radius: 0;
+  min-height: 44px;
+  padding: 6px 10px;
+}
+.as-lab button {
+  cursor: pointer;
+}
+.as-lab button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.as-lab input {
+  width: 20px;
+  height: 20px;
+  accent-color: #35445e;
+}
+.as-lab :focus-visible {
+  outline: 3px solid #ae494f;
+  outline-offset: 2px;
+}
+.as-lab [data-board] {
+  max-width: 440px;
+  margin: 20px auto;
+}
+.as-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+.as-lab .as-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 52px;
+  aspect-ratio: 1;
+  padding: 2px;
+  line-height: 1.2;
+}
+.as-cell span {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.as-cell small {
+  font-size: 0.75rem;
+  min-height: 1em;
+}
+.as-lab .as-wall {
+  background: #35445e;
+  color: #fff;
+}
+.as-lab .as-open {
+  background: #f5dfae;
+}
+.as-lab .as-closed {
+  background: #ccd8ee;
+}
+.as-lab .as-current {
+  background: #eaa5a5;
+}
+.as-lab .as-path {
+  background: #bce0ca;
+}
+.as-lab .as-cell[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 2px #ae494f;
+}
+.as-legend {
+  color: #5d6b82;
+}
+.as-status,
+.as-detail {
+  min-height: 3.6em;
+}
+.as-frontier {
+  overflow-wrap: anywhere;
+}
+.as-lab [data-board] img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

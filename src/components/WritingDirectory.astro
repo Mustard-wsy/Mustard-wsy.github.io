@@ -52,8 +52,8 @@ const ancestors = path
   <p>
     {current.description ||
       (!path
-        ? '笔记、实验记录，还有一些感兴趣的事。'
-        : '这个合集中的文章与下级目录。')}
+        ? '笔记, 实验记录, 还有一些感兴趣的事.'
+        : '这个合集中的文章与下级目录.')}
   </p>
 </header>
 {children.length > 0 && (
@@ -110,6 +110,6 @@ const ancestors = path
 {!children.length && !current.entries.length && (
   <div class="empty-state">
     <span>暂无文章</span>
-    <p>文章发布后会显示在这里。</p>
+    <p>文章发布后会显示在这里.</p>
   </div>
 )}

@@ -102,7 +102,7 @@ if (player) {
       await loading;
     } catch (error) {
       loading = undefined;
-      status.textContent = '录制暂时无法加载，可以稍后重试；静态画面仍可查看。';
+      status.textContent = '录制暂时无法加载, 可以稍后重试; 静态画面仍可查看.';
       throw error;
     }
   }
@@ -122,7 +122,7 @@ if (player) {
       started = performance.now() - time * 1000;
       button.textContent = '暂停';
       button.setAttribute('aria-pressed', 'true');
-      status.textContent = '真实终端输出回放，录制中的鼠标划动由脚本输入。';
+      status.textContent = '真实终端输出回放, 录制中的鼠标划动由脚本输入.';
       request = requestAnimationFrame(tick);
     } catch {
       // Keep the poster and retry control available after a failed request.

@@ -10,7 +10,9 @@
   --shadow: #bdc6df;
   --sans: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --serif: var(--sans);
-  --mono: 'Cascadia Code', Consolas, monospace;
+  --mono:
+    'Sarasa Mono SC', 'Noto Sans Mono CJK SC', 'Cascadia Mono', 'Cascadia Code',
+    Consolas, 'NSimSun', monospace;
 }
 * {
   box-sizing: border-box;
@@ -320,7 +322,7 @@ nav a[aria-current='page']:after {
   color: var(--muted);
   font-size: 14px;
 }
-.writing-row time {
+.writing-row :is(time, .publication-date) {
   font: 11px var(--mono);
   color: var(--muted);
   white-space: nowrap;
@@ -534,7 +536,7 @@ nav a[aria-current='page']:after {
   color: var(--muted);
   margin-top: 20px;
 }
-.article-meta time {
+.article-meta :is(time, .publication-date) {
   font-family: var(--mono);
 }
 .reading-layout {
@@ -668,6 +670,7 @@ nav a[aria-current='page']:after {
   scroll-margin-top: 32px;
 }
 .prose {
+  font-family: var(--mono);
   max-width: 720px;
   font-size: 17px;
   line-height: 1.95;
@@ -936,7 +939,7 @@ nav a[aria-current='page']:after {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
   }
-  .writing-row time {
+  .writing-row :is(time, .publication-date) {
     font-size: 10px;
   }
   .row-arrow {

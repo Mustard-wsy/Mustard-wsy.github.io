@@ -1,0 +1,15 @@
+---
+import { displayDate } from '../lib/site';
+interface Props {
+  data: { publishedAt?: string; dateStatus?: 'before-site' };
+}
+const { data } = Astro.props;
+---
+
+{data.publishedAt ? (
+  <time datetime={data.publishedAt}>{displayDate(data.publishedAt)}</time>
+) : (
+  <span class="publication-date" aria-label="建站前写成, 具体日期不详">
+    建站前
+  </span>
+)}

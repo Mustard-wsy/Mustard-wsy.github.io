@@ -4,6 +4,10 @@
 
 ## 1. 内容与界面分离
 
+站点可读文本统一使用英文半角标点. 一键清洗使用 `npm run clean:punctuation`, 只检查使用 `npm run clean:punctuation:check`. 默认扫描 `content/`, `fixtures/`, `templates/` 的 Markdown 和元数据 JSON, 以及 `public/media/` 与样例目录的 SVG 文本. 转换正文、标题、摘要、标签、图片替代文字及 HTML 可读属性, 不改文件名、slug、资源地址、引用标识、代码和数学公式. 交互脚本和 Astro 界面文案需在编辑时使用半角标点, 不进行源码全局替换.
+
+脚本先解析全部候选文件再写入, 修改前自动备份到 Git 忽略的 `test-results/punctuation-backups/<时间>/`, 重复执行不会反复改动同一文本. 常见逗号、句号、顿号、分号、冒号、问叹号、括号、引号、省略号和破折号转成 ASCII 对应字符, 新转换的句读在必要处补空格. Markdown 方括号会转义以免形成新链接, YAML/HTML 引号会按各自语法编码. 不修改 Course 源目录, 不执行 Git 或发布.
+
 推荐逻辑目录如下；框架选型后可以调整路径，但字段语义和新增内容流程应保持稳定，并同步更新本文档。
 
 ```text
@@ -23,17 +27,30 @@ public/
 
 ## 2. 通用字段
 
-| 字段          | 必填 | 约定                                                           |
-| ------------- | ---- | -------------------------------------------------------------- |
-| `title`       | 是   | 展示标题                                                       |
-| `slug`        | 是   | 稳定的小写英文、数字与连字符；同类型内唯一                     |
-| `description` | 是   | 简短摘要，建议 40–120 个汉字，不作为硬性字数门槛               |
-| `publishedAt` | 是   | `YYYY-MM-DD`，以作者 Asia/Shanghai 日历日期为准                |
-| `updatedAt`   | 否   | 实质内容更新日期，不早于发布日期                               |
-| `draft`       | 是   | `true` 不进入正式构建；`dev:local` 可预览；新建模板默认 `true` |
-| `tags`        | 否   | 字符串列表；少量、稳定、避免同义重复                           |
+| 字段          | 必填     | 约定                                                             |
+| ------------- | -------- | ---------------------------------------------------------------- |
+| `title`       | 是       | 展示标题                                                         |
+| `slug`        | 是       | 稳定的小写英文、数字与连字符；同类型内唯一                       |
+| `description` | 是       | 简短摘要，建议 40–120 个汉字，不作为硬性字数门槛                 |
+| `publishedAt` | 条件必填 | 已知日期使用 `YYYY-MM-DD`, 以作者 Asia/Shanghai 日历日期为准     |
+| `dateStatus`  | 条件必填 | 无确定日期的建站前内容填写 `before-site`, 不同时填写 publishedAt |
+| `updatedAt`   | 否       | 实质内容更新日期，不早于发布日期                                 |
+| `draft`       | 是       | `true` 不进入正式构建；`dev:local` 可预览；新建模板默认 `true`   |
+| `tags`        | 否       | 字符串列表；少量、稳定、避免同义重复                             |
 
 日期在 YAML 中使用引号，避免不同解析器自动转换类型。第一版不提供定时发布；`draft: false` 的内容会在部署时公开，未来日期应触发校验错误，而不是默默等待发布。
+
+### 建站前内容与不确定日期
+
+日期与日期说明分开存储. 已知真实日期时即使早于建站也照常填写 `publishedAt: '2020-01-01'`; 不知道具体年月日、只确定属于建站前时, 删除 publishedAt 并填写:
+
+```yaml
+dateStatus: 'before-site'
+```
+
+两者须且只能填写一个. 不使用 `too old`, `unknown`, `0000-00-00` 或虚构日期占位. 该值是本站的枚举状态, 不是标准日期格式. 列表和详情显示"建站前", 使用普通文本标签, 不输出无效 datetime. 普通日期继续用 `<time datetime="YYYY-MM-DD">`. 依据: [HTML time 日期语义](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/time) 与 [Schema.org datePublished 的 Date/DateTime 类型](https://schema.org/datePublished).
+
+排序时所有日期明确的文章仍按日期倒序, "建站前且日期不详"单独放在这些文章之后, 同组按 slug 稳定排序; 这是本站的展示约定, 不声称它们一定早于每篇已知日期的旧文章. 玩具和项目仍优先按 featuredOrder 排序. updatedAt 继续填写真实更新日期. 可以复制 `templates/note-before-site.md`, 默认保持草稿.
 
 草稿与预览样本必须从生产页面、索引、RSS 和站点图中同时排除。若使用公开仓库，草稿源文件仍可被看到；敏感内容不要提交到仓库。
 

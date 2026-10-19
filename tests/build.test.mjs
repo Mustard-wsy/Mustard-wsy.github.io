@@ -12,12 +12,31 @@ const outputs = [
   { name: 'demo', demo: true, base: '/' },
   { name: 'subpath', demo: true, base: '/Blog/' },
 ];
+
+test('pre-site dates render as labels instead of invalid machine dates in root and subpath pages', () => {
+  for (const output of outputs) {
+    const slug = output.demo ? 'two-sum' : 'townscaper-dual-grid-2d';
+    const html = readFileSync(
+      join(output.dir, 'writing', slug, 'index.html'),
+      'utf8',
+    );
+    assert.match(html, /class="publication-date"[^>]*>建站前<\/span>/);
+    assert.doesNotMatch(html, /datetime="(?:too old|before-site|undefined)"/);
+    if (output.demo) {
+      const work = readFileSync(
+        join(output.dir, 'toys/desktop-pet/index.html'),
+        'utf8',
+      );
+      assert.match(work, /class="publication-date"[^>]*>建站前<\/span>/);
+    }
+  }
+});
 before(() => {
   for (const output of outputs) {
     output.dir = resolve('test-results', `build-${output.name}`);
     execFileSync(
       process.execPath,
-      ['node_modules/astro/bin/astro.mjs', 'build', '--outDir', output.dir],
+      ['scripts/astro-isolated.mjs', 'build', '--outDir', output.dir],
       {
         env: {
           ...process.env,

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500" role="img" aria-labelledby="title desc">
+  <title id="title">从上方绕墙的六步路径</title>
+  <desc id="desc">五乘五地图, 起点在第零列第一行, 终点在第四列第一行. 第二列第一至三行为墙. 路线从第一列向上绕行, 共六步.</desc>
+  <rect width="500" height="500" fill="#edf1f8"/>
+  <path d="M0 100h100V0h400v200H400V100H200v100H0Z" fill="#bce0ca"/>
+  <path d="M200 100h100v300H200Z" fill="#35445e"/>
+  <path d="M0 0H500V500H0Z M100 0V500 M200 0V500 M300 0V500 M400 0V500 M0 100H500 M0 200H500 M0 300H500 M0 400H500" fill="none" stroke="#35445e" stroke-width="2"/>
+  <path d="M50 150H150V50H450V150" fill="none" stroke="#39795c" stroke-width="6" stroke-linejoin="round"/>
+  <g font-family="monospace" font-size="28" font-weight="bold" text-anchor="middle" fill="#29364f" stroke="#bce0ca" stroke-width="8" paint-order="stroke">
+    <text x="50" y="160">S</text><text x="450" y="160">G</text>
+  </g>
+  <g font-family="monospace" font-size="24" text-anchor="middle" fill="#fff">
+    <text x="250" y="160">#</text><text x="250" y="260">#</text><text x="250" y="360">#</text>
+  </g>
+</svg>

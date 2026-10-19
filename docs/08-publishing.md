@@ -71,7 +71,43 @@ tags: ['计算机网络', '课程笔记']
 
 `dev:local` 是真实内容及草稿预览，`dev:demo` 是 fixtures 样例预览，`dev` 只显示非草稿的真实内容。正式 `npm run build` 始终排除草稿，即使环境中遗留 `LOCAL_PREVIEW=true`。这个预览开关不会写进文章字段；今后准备发布时再把 draft 改为 false，并单独执行发布流程。
 
+## 一键发布整个博客
+
+可以保持本地预览运行再执行发布. 类型检查、测试构建与正式构建使用独立临时工作目录, 避免 Windows 下与预览争用 `.astro/` 而出现 `EPERM rename content-assets.mjs.tmp` 错误. 不需要管理员权限, 也不需要删除预览缓存. 临时目录位于 Git 忽略的 test-results, 不会随发布上传.
+
+修改完成并保存后，在网站目录运行：
+
+```powershell
+npm run publish:site
+```
+
+需要已安装项目依赖（首次运行 `npm ci`），Git 已按上文配置。本命令使用 Node.js 22.21+ 的环境代理支持，本机 22.23.2 已满足。按作者选择，它会发布**全部未被 Git 忽略的改动**，包含代码、配置、文档、内容与新增资源，也包含已经暂存的文件；无需事先手动 add、commit、push。`draft: true` 继续从网站页面排除，但草稿源文件会上传到公开仓库。`node_modules/`、`test-results/`、`.env` 等已忽略文件不会加入提交。
+
+依次执行，任何一步失败立即以非零状态退出：
+
+1. 检查当前分支、origin、Git 冲突及远端版本；远端有本地未包含的提交时停止，不自动合并或覆盖。
+2. `npm run clean:punctuation:check` → `npm run format:check` → `npm run check` → `npm test`. 标点检查失败时先运行 `npm run clean:punctuation`, 审阅变化后重新发布.
+3. 按发布配置正式构建至 `test-results/publish-site-build/`，校验内链与资源；关闭样例和本地草稿预览。
+4. 确认检查期间源文件没有改变，暂存全部改动并提交为 `site: publish updates`，再 push。
+5. 每 30 秒查询当前提交对应的 `pages.yml` push 工作流，最多等待 20 分钟；部署成功才显示“Pages 部署成功”。
+
+只验证本地流程、不提交、不联网上传：
+
+```powershell
+npm run publish:site -- --check-only
+```
+
+日志会显示 `停止于【具体步骤】`。格式检查失败可先运行 `npm run format`，审阅格式变化后再发布；内容、类型、测试或构建错误按上方原始报错修复。检查失败不提交；暂存或提交阶段出错可能留下暂存内容。push 失败保留本地提交，修复网络或认证后重新运行同一命令，不会为未变化的文件重复创建提交。
+
+Pages 失败会给出对应工作流日志链接，并尽量显示失败作业和步骤。修正源文件后重新运行即可；若只是 GitHub 临时部署故障，先在 Actions 重跑失败作业，再运行命令查看最新结果。脚本不自动重跑失败部署，也不会因等待超时取消云端任务。push 之后云端失败不能撤回已上传的源文件，原站点是否更新以 Actions 实际结果为准。
+
+状态查询使用 [GitHub 官方公开工作流 API](https://docs.github.com/en/rest/actions/workflow-runs#list-workflow-runs-for-a-workflow)，无需额外安装 GitHub CLI 或配置令牌。API 网络失败、限流或查询超时同样停止，输出的 Actions 链接可用来查看实际状态。若 Node 网络也需要代理，可在当前 PowerShell 设置 `$env:HTTPS_PROXY = 'http://127.0.0.1:7897'` 后运行；Git 自己的仓库代理设置仍独立生效。
+
+不要同时运行 `publish:watch`、`publish:notes` 和 `publish:site`；它们共用发布锁。Ctrl+C 停止本地进程，已 push 的 Actions 仍会继续。异常退出遗留锁时，确认没有发布进程，再删除 `.git/mustard-publish.lock`。
+
 ## 日常写作与上传
+
+建站前且日期不详的旧笔记使用 `templates/note-before-site.md`: 填写 `dateStatus: 'before-site'`, 不填写 publishedAt. 页面显示"建站前". 若知道真实日期则正常填写 publishedAt, 即使早于建站也有效; 不使用 `too old` 或虚构日期占位. 文章、玩具和项目共用此规则.
 
 ### 已迁入的计算机网络笔记
 

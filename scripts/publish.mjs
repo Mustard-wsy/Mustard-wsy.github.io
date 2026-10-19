@@ -146,7 +146,7 @@ export async function main() {
       SITE_URL: config.siteUrl,
       BASE_PATH: config.basePath,
     };
-    const cli = join(root, 'node_modules', 'astro', 'bin', 'astro.mjs');
+    const cli = join(root, 'scripts', 'astro-isolated.mjs');
     for (const args of [
       ['check'],
       ['build', '--outDir', join(root, 'test-results', 'publish-build')],

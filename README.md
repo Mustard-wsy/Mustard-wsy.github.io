@@ -30,11 +30,18 @@ npm run dev:demo
 | `npm run format:check`  | 检查格式                                                         |
 | `npm run publish:watch` | 监测发布目录，检查通过后自动提交上传（需先连接仓库）             |
 | `npm run publish:notes` | 单次检查、提交并上传内容（需先连接仓库）                         |
+| `npm run publish:site`  | 一键检查全部改动、提交上传，并等待 Pages 部署结果                |
 | `npm run verify:build`  | 检查 `dist/` 中的站内链接和资源                                  |
 
-计算机网络前三章笔记及配图、字段交互已迁入，并设为公开内容；玩具与项目尚未录入。使用 `npm run dev` 可查看公开文章，`npm run dev:local` 还包含草稿。最新发布验证见[实施记录](docs/07-implementation-status.md)。新增内容的字段见[内容指南](docs/04-content-guide.md)。关于页文本根据对话整理，正式发布前应复核。
+计算机网络与机器学习导论各前八章笔记已迁入。计算机网络前三章、机器学习前两章保持非草稿，其余章节为本地草稿；2026-10-19 按 Course 更新的正文与新增草稿尚未上传。玩具与项目尚未录入。使用 `npm run dev` 可查看非草稿文章，`npm run dev:local` 还包含草稿。最新发布验证见[实施记录](docs/07-implementation-status.md)。新增内容的字段见[内容指南](docs/04-content-guide.md)。关于页文本根据对话整理，正式发布前应复核。
 
 ## 修改入口
+
+类型检查、测试构建与正式构建使用独立临时工作目录, 可以在本地预览运行时执行. 不会共用预览的 `.astro/` 文件; 正式产物仍输出到 dist, 样例产物仍输出到 dist-demo. 临时副本在命令结束后自动清理, 具体实现见[工程约定](docs/05-engineering.md#5-校验与测试).
+
+标点一键清洗: `npm run clean:punctuation`; 只检查: `npm run clean:punctuation:check`. 覆盖文章、元数据、样例和SVG可读文本, 自动备份原文件, 保留代码、公式和资源地址. 具体边界见[内容指南](docs/04-content-guide.md). 正文已采用本机等宽字体栈, 界面标题和导航保留系统无衬线字体.
+
+修改博客后要一次完成检查直到 Pages 部署，运行 `npm run publish:site`（Node.js 22.21+，本机已满足）。它发布全部未被 Git 忽略的改动，包括代码和草稿源文件；任何步骤出错立即停止。只检查、不上传用 `npm run publish:site -- --check-only`，具体步骤和失败处理见[一键发布整个博客](docs/08-publishing.md#一键发布整个博客)。
 
 - `src/lib/site.ts`：站名、身份信息、简短个人介绍。
 - `content/pages/about.md`：关于页正文。

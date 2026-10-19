@@ -81,5 +81,5 @@ export function meshSvg(
         })
         .join('')
     : '';
-  return `<svg xmlns="${ns}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${terrain ? '可编辑海陆网格，绿色为陆地，蓝色为水。点击顶点附近可翻转海陆状态。' : '网格生成当前阶段，橙色为三角形，蓝灰色为四边形。'}">${polygons}${land}${outlines}${dots}${hits}</svg>`;
+  return `<svg xmlns="${ns}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${terrain ? '可编辑海陆网格, 绿色为陆地, 蓝色为水. 点击顶点附近可翻转海陆状态.' : '网格生成当前阶段, 橙色为三角形, 蓝灰色为四边形.'}">${polygons}${land}${outlines}${dots}${hits}</svg>`;
 }

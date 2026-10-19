@@ -32,6 +32,10 @@ function contentUrls() {
 
 export default defineConfig({
   output: 'static',
+  cacheDir:
+    process.env.MUSTARD_ASTRO_ISOLATED === 'true'
+      ? './.astro/cache/'
+      : undefined,
   publicDir: demo ? './fixtures/public' : './public',
   site: process.env.SITE_URL || undefined,
   base,
@@ -40,6 +44,7 @@ export default defineConfig({
   devToolbar: { enabled: false },
   markdown: {
     processor: unified({
+      smartypants: false,
       remarkPlugins: [remarkMath],
       rehypePlugins: [rehypeRaw, rehypeKatex, contentUrls],
     }),
