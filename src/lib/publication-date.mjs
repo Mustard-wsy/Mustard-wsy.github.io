@@ -14,7 +14,6 @@ const date = z
 export const publicationFields = {
   publishedAt: date.optional(),
   dateStatus: z.literal('before-site').optional(),
-  updatedAt: date.optional(),
 };
 
 export function validatePublicationDate(data, ctx) {
@@ -25,19 +24,4 @@ export function validatePublicationDate(data, ctx) {
       message:
         '填写有效 publishedAt, 或仅填写 dateStatus: before-site, 二者须且只能选一个',
     });
-}
-
-/**
- * @param {{data: {publishedAt?: string, slug: string}}} a
- * @param {{data: {publishedAt?: string, slug: string}}} b
- */
-export function byPublicationDate(a, b) {
-  const first = a.data.publishedAt,
-    second = b.data.publishedAt;
-  if (first && !second) return -1;
-  if (!first && second) return 1;
-  return (
-    (second ?? '').localeCompare(first ?? '') ||
-    a.data.slug.localeCompare(b.data.slug)
-  );
 }

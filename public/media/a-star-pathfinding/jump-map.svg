@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="500" viewBox="0 0 700 500" role="img" aria-labelledby="title desc">
+  <title id="title">空地上的跳点衔接</title>
+  <desc id="desc">从左下角 S 沿右上方向走三步到 (3,1), 再向右三步到 G. 中间跳点 J 不挨着墙, 它的水平扫描能找到终点.</desc>
+  <rect width="700" height="500" fill="#edf1f8"/>
+  <path d="M0 0H700V500H0Z M100 0V500 M200 0V500 M300 0V500 M400 0V500 M500 0V500 M600 0V500 M0 100H700 M0 200H700 M0 300H700 M0 400H700" fill="none" stroke="#bdc6df" stroke-width="2"/>
+  <path d="M50 450 350 150H650" fill="none" stroke="#39795c" stroke-width="7"/>
+  <g fill="#bce0ca" stroke="#35445e" stroke-width="2"><rect x="15" y="415" width="70" height="70"/><rect x="315" y="115" width="70" height="70"/><rect x="615" y="115" width="70" height="70"/></g>
+  <g font-family="monospace" font-size="30" font-weight="bold" text-anchor="middle" fill="#29364f"><text x="50" y="461">S</text><text x="350" y="161">J</text><text x="650" y="161">G</text></g>
+</svg>

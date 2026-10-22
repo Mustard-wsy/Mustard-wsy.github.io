@@ -1,0 +1,74 @@
+.nm-demo {
+  margin: 2rem 0;
+  padding: clamp(12px, 3vw, 22px);
+  border: 2px solid #35445e;
+  box-shadow: 4px 4px 0 #bdc6df;
+  background: #f9fbff;
+  color: #29364f;
+}
+.nm-demo * {
+  box-sizing: border-box;
+}
+.nm-demo [hidden] {
+  display: none !important;
+}
+.nm-demo .nm-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.nm-demo p {
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.nm-demo [data-board] {
+  margin: 14px auto;
+  max-width: 600px;
+}
+.nm-demo svg,
+.nm-demo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+.nm-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+.nm-controls label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nm-controls button,
+.nm-controls select {
+  font: inherit;
+  color: #29364f;
+  border: 1px solid #35445e;
+  background: #edf1f8;
+  border-radius: 0;
+  min-height: 44px;
+  padding: 6px 10px;
+}
+.nm-controls button {
+  cursor: pointer;
+}
+.nm-controls button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.nm-controls :focus-visible {
+  outline: 3px solid #ae494f;
+  outline-offset: 3px;
+}
+.nm-demo .nm-status {
+  min-height: 3.6em;
+  margin-bottom: 0;
+}
+.nm-demo .nm-legend {
+  color: #5d6b82;
+}

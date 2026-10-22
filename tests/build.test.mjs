@@ -273,3 +273,45 @@ test('production ignores the local preview flag and excludes real drafts', () =>
     /本地预览/,
   );
 });
+
+test('each generated collection lists its direct articles in ascending slug order', () => {
+  for (const output of outputs) {
+    const root = resolve(output.demo ? 'fixtures/writing' : 'content/writing');
+    const groups = new Map();
+    for (const file of files(root).filter((file) => file.endsWith('.md'))) {
+      const { frontmatter: data } = parseFrontmatter(
+        readFileSync(file, 'utf8'),
+      );
+      if (data.draft) continue;
+      const folder = dirname(relative(root, file));
+      if (!groups.has(folder)) groups.set(folder, []);
+      groups.get(folder).push(data.slug);
+      const detail = readFileSync(
+        join(output.dir, 'writing', data.slug, 'index.html'),
+        'utf8',
+      );
+      assert.doesNotMatch(detail, /更新于/);
+    }
+    for (const [folder, slugs] of groups) {
+      const html = readFileSync(
+        join(
+          output.dir,
+          'writing',
+          folder === '.' ? '' : join('collections', folder),
+          'index.html',
+        ),
+        'utf8',
+      );
+      const actual = [
+        ...html.matchAll(
+          /class="entry-title"[^>]*>\s*<a href="[^"]*\/writing\/([a-z0-9-]+)\/"/g,
+        ),
+      ].map((match) => match[1]);
+      assert.deepEqual(
+        actual,
+        slugs.sort((a, b) => a.localeCompare(b)),
+        `${output.name}/${folder}`,
+      );
+    }
+  }
+});

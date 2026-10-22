@@ -3,7 +3,7 @@ import { createSearch, makeMap } from './search.js';
 const root = document.querySelector('#astar-lab');
 if (root) {
   const mode = root.querySelector('[data-mode]');
-  const block = root.querySelector('[data-block]');
+  const scene = root.querySelector('[data-scene]');
   const board = root.querySelector('[data-board]');
   const status = root.querySelector('[data-status]');
   const detail = root.querySelector('[data-detail]');
@@ -73,7 +73,7 @@ if (root) {
                 ? '候选'
                 : '未到达';
       const score = state.g.has(id) ? state.score(id) : null;
-      const label = `${coord(id)} ${id === map.start ? '起点, ' : id === map.goal ? '终点, ' : ''}${name}${score === null ? '' : `, 排序分数 ${score}`}`;
+      const label = `${coord(id)} ${id === map.start ? '起点, ' : id === map.goal ? '终点, ' : ''}${name}${map.costs?.has(id) ? ', 沼泽, 进入代价 5' : ''}${score === null ? '' : `, 排序分数 ${score}`}`;
       cells[id].className = `as-cell as-${kind}`;
       cells[id].setAttribute('aria-label', label);
       cells[id].setAttribute('aria-pressed', String(selected === id));
@@ -81,7 +81,11 @@ if (root) {
       const mark = document.createElement('span');
       mark.textContent = symbol;
       const value = document.createElement('small');
-      value.textContent = score === null ? ' ' : String(score);
+      value.textContent = map.costs?.has(id)
+        ? '沼泽 5'
+        : score === null
+          ? ' '
+          : String(score);
       cells[id].append(mark, value);
     }
     status.textContent = state.found
@@ -103,11 +107,11 @@ if (root) {
   }
 
   function reset() {
-    state = createSearch(makeMap(block.checked), mode.value);
+    state = createSearch(makeMap(scene.value), mode.value);
     render();
   }
   mode.addEventListener('change', reset);
-  block.addEventListener('change', reset);
+  scene.addEventListener('change', reset);
   root.querySelector('[data-reset]').addEventListener('click', reset);
   root.querySelector('[data-step]').addEventListener('click', () => {
     state.step();

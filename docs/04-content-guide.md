@@ -34,7 +34,6 @@ public/
 | `description` | 是       | 简短摘要，建议 40–120 个汉字，不作为硬性字数门槛                 |
 | `publishedAt` | 条件必填 | 已知日期使用 `YYYY-MM-DD`, 以作者 Asia/Shanghai 日历日期为准     |
 | `dateStatus`  | 条件必填 | 无确定日期的建站前内容填写 `before-site`, 不同时填写 publishedAt |
-| `updatedAt`   | 否       | 实质内容更新日期，不早于发布日期                                 |
 | `draft`       | 是       | `true` 不进入正式构建；`dev:local` 可预览；新建模板默认 `true`   |
 | `tags`        | 否       | 字符串列表；少量、稳定、避免同义重复                             |
 
@@ -50,7 +49,7 @@ dateStatus: 'before-site'
 
 两者须且只能填写一个. 不使用 `too old`, `unknown`, `0000-00-00` 或虚构日期占位. 该值是本站的枚举状态, 不是标准日期格式. 列表和详情显示"建站前", 使用普通文本标签, 不输出无效 datetime. 普通日期继续用 `<time datetime="YYYY-MM-DD">`. 依据: [HTML time 日期语义](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/time) 与 [Schema.org datePublished 的 Date/DateTime 类型](https://schema.org/datePublished).
 
-排序时所有日期明确的文章仍按日期倒序, "建站前且日期不详"单独放在这些文章之后, 同组按 slug 稳定排序; 这是本站的展示约定, 不声称它们一定早于每篇已知日期的旧文章. 玩具和项目仍优先按 featuredOrder 排序. updatedAt 继续填写真实更新日期. 可以复制 `templates/note-before-site.md`, 默认保持草稿.
+文章库和各合集内的直属文章统一按 slug 升序排列, 不参考标题、文件名或日期; "建站前"也不再单独分组. 建议章节 slug 补齐数字位数, 如 `ml-01`, `ml-02`, `ml-10`. 玩具和项目仍优先按 featuredOrder 排序, 其后按 slug 升序. 可以复制 `templates/note-before-site.md`, 默认保持草稿. 不再填写或维护 updatedAt/updateAt, 页面只保留发布日期或"建站前"标签; 修订历史通过 Git 查看.
 
 草稿与预览样本必须从生产页面、索引、RSS 和站点图中同时排除。若使用公开仓库，草稿源文件仍可被看到；敏感内容不要提交到仓库。
 
@@ -155,7 +154,7 @@ featuredOrder: 1
 
 作者当前采用“在外部笔记目录打磨，再复制到网站”的流程。首次完成 GitHub 配置后，可运行 `npm run publish:watch` 监测 `content/` 与 `public/`；复制完成并稳定 10 秒后自动检查、提交上传。文首字段仍必须填写，参考 `templates/note.md`。详细步骤与 HTML 交互写法见[托管与日常发布](08-publishing.md)。上传目录及其 Git 历史公开，草稿继续留在外部目录。
 
-删除或修改字段时同步更新内容校验与模板。文章纠错和重要补充更新 `updatedAt`；仅修标点或样式时不必改变它。
+删除或修改字段时同步更新内容校验与模板. 文章纠错、补充或格式调整直接修改正文, 不维护更新日期字段, 不因修文改动原始发布日期.
 
 ## 8. 设计预览素材
 

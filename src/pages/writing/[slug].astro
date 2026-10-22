@@ -5,7 +5,7 @@ import ArticleToc from '../../components/ArticleToc.astro';
 import { library } from '../../lib/content';
 import { folderPath, folderLink } from '../../lib/writing-folders.mjs';
 import { resolve } from 'node:path';
-import { url, displayDate } from '../../lib/site';
+import { url } from '../../lib/site';
 import PublicationDate from '../../components/PublicationDate.astro';
 import 'katex/dist/katex.min.css';
 export async function getStaticPaths() {
@@ -47,7 +47,6 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
       <p class="article-deck">{data.description}</p>
       <div class="article-meta">
         <PublicationDate data={data} />
-        {data.updatedAt && <span>更新于 {displayDate(data.updatedAt)}</span>}
       </div>
     </header>
     <div class="reading-layout">

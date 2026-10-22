@@ -12,7 +12,7 @@ function finish(state) {
   return state;
 }
 
-test('tutorial decisions and six-step route match the written walkthrough', () => {
+test('the four-direction wall scene retains its deterministic six-step route', () => {
   const state = createSearch(makeMap());
   const expected = [5, 6, 11, 1, 2, 3, 4, 9];
   for (const id of expected) {
@@ -44,7 +44,7 @@ test('A* and Dijkstra agree with an independent BFS across every wall pattern', 
         queue.push(next);
       }
     }
-    for (const mode of ['astar', 'dijkstra']) {
+    for (const mode of ['astar', 'dijkstra', 'bfs']) {
       const state = finish(createSearch(map, mode));
       assert.equal(state.found, distances.has(8));
       if (!state.found) {
@@ -68,7 +68,7 @@ test('A* and Dijkstra agree with an independent BFS across every wall pattern', 
 });
 
 test('all modes terminate for blocked exits and start equal to goal', () => {
-  for (const mode of ['astar', 'dijkstra', 'greedy']) {
+  for (const mode of ['astar', 'dijkstra', 'greedy', 'bfs']) {
     const blocked = finish(createSearch(makeMap(true), mode));
     assert.equal(blocked.found, false);
     assert.equal(blocked.open.size, 0);
@@ -80,5 +80,16 @@ test('all modes terminate for blocked exits and start equal to goal', () => {
     );
     assert.deepEqual(same.path, [0]);
     assert.equal(same.g.get(0), 0);
+  }
+});
+
+test('BFS minimizes steps while Dijkstra and A* minimize terrain costs', () => {
+  const bfs = finish(createSearch(makeMap('mud'), 'bfs'));
+  assert.equal(bfs.path.length - 1, 4);
+  assert.equal(bfs.g.get(9), 16);
+  for (const mode of ['astar', 'dijkstra']) {
+    const state = finish(createSearch(makeMap('mud'), mode));
+    assert.equal(state.path.length - 1, 6);
+    assert.equal(state.g.get(9), 6);
   }
 });

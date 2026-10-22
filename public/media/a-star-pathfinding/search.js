@@ -1,11 +1,23 @@
-// A finite, unit-cost, four-neighbor teaching map. No global site dependency.
-export function makeMap(blocked = false) {
+// Four-neighbor teaching maps. Costs are charged on entering the destination tile.
+export function makeMap(scene = 'wall') {
+  const blocked = scene === true || scene === 'blocked';
   return {
     width: 5,
     height: 5,
     start: 5,
     goal: 9,
-    walls: new Set(blocked ? [2, 7, 12, 17, 22] : [7, 12, 17]),
+    walls: new Set(
+      blocked ? [2, 7, 12, 17, 22] : scene === 'mud' ? [] : [7, 12, 17],
+    ),
+    costs: new Map(
+      scene === 'mud'
+        ? [
+            [6, 5],
+            [7, 5],
+            [8, 5],
+          ]
+        : [],
+    ),
   };
 }
 
@@ -14,6 +26,7 @@ export function createSearch(map, mode = 'astar') {
     Math.abs((id % map.width) - (map.goal % map.width)) +
     Math.abs(Math.floor(id / map.width) - Math.floor(map.goal / map.width));
   const g = new Map([[map.start, 0]]);
+  const depth = new Map([[map.start, 0]]);
   const parent = new Map();
   const open = new Map([[map.start, 0]]);
   const closed = new Set();
@@ -31,12 +44,16 @@ export function createSearch(map, mode = 'astar') {
     found: false,
     h,
     score: (id) =>
-      mode === 'greedy' ? h(id) : g.get(id) + (mode === 'astar' ? h(id) : 0),
+      mode === 'bfs'
+        ? depth.get(id)
+        : mode === 'greedy'
+          ? h(id)
+          : g.get(id) + (mode === 'astar' ? h(id) : 0),
     candidates: () =>
       [...open.keys()].sort(
         (a, b) =>
           state.score(a) - state.score(b) ||
-          h(a) - h(b) ||
+          (mode === 'bfs' ? 0 : h(a) - h(b)) ||
           open.get(a) - open.get(b),
       ),
     step() {
@@ -68,9 +85,11 @@ export function createSearch(map, mode = 'astar') {
         if (nx < 0 || nx >= map.width || ny < 0 || ny >= map.height) continue;
         const next = ny * map.width + nx;
         if (map.walls.has(next) || closed.has(next)) continue;
-        const cost = g.get(current) + 1;
+        if (mode === 'bfs' && g.has(next)) continue;
+        const cost = g.get(current) + (map.costs?.get(next) ?? 1);
         if (cost >= (g.get(next) ?? Infinity)) continue;
         g.set(next, cost);
+        depth.set(next, depth.get(current) + 1);
         parent.set(next, current);
         if (!open.has(next)) open.set(next, order++);
       }
