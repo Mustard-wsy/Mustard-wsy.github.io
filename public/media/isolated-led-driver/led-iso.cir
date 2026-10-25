@@ -1,0 +1,38 @@
+* Classroom isolated LED driver. Generic Q1/Q2/D1; original Vishay U1 typical model.
+.include "6N136.lib"
+Vinputpower IN_3V3 0 3.3
+Vinput SIG_IN 0 PULSE(0 3.3 0.1 1u 1u 1 2)
+Voutputpower ISO_5V ISO_GND 5
+* Numerical floating-side reference only, absent from physical PCB.
+Rnumerical ISO_GND 0 1e12
+Q1 OPTO_A Q1_BASE IN_3V3 PNP_TEACH
+R2 SIG_IN Q1_BASE 1k
+R6 Q1_BASE IN_3V3 100k
+R1 OPTO_K 0 270
+XU1 OPTO_A OPTO_K ISO_GND OPTO_OUT OPTO_B ISO_5V 6N136
+R3 ISO_5V OPTO_OUT 5.1k
+R4 OPTO_OUT Q2_BASE 1k
+R7 Q2_BASE ISO_GND 100k
+Q2 LED_K Q2_BASE ISO_GND NPN_TEACH
+R5 ISO_5V LED_A 330
+D1 LED_A LED_K LED_RED_TEACH
+C1 ISO_5V ISO_GND 100n
+.model NPN_TEACH NPN(IS=1e-14 BF=100 VAF=100 IKF=0.1 RC=1 RB=10 RE=0.1 CJE=8p CJC=4p TF=0.3n TR=50n)
+.model PNP_TEACH PNP(IS=1e-14 BF=100 VAF=100 IKF=0.1 RC=1 RB=10 RE=0.1 CJE=8p CJC=4p TF=0.3n TR=50n)
+.model LED_RED_TEACH D(IS=1e-18 N=2 RS=5 CJO=10p)
+.options reltol=1e-4 abstol=1e-12 method=gear
+.temp 25
+.control
+set noaskquit
+set wr_vecnames
+set wr_singlescale
+tran 1m 4.2 0 100u
+let vopto=v(OPTO_OUT)-v(ISO_GND)
+let vbase=v(Q2_BASE)-v(ISO_GND)
+let vledk=v(LED_K)-v(ISO_GND)
+let iled=(v(ISO_5V)-v(LED_A))/330
+let iopto=v(OPTO_K)/270
+wrdata transient.txt v(SIG_IN) vopto vbase vledk iled iopto
+quit
+.endc
+.end
