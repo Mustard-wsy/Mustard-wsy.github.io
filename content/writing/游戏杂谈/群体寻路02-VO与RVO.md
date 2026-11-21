@@ -107,4 +107,4 @@ $$
 
 [RVO2 官方版本说明](https://gamma-web.iacs.umd.edu/RVO2/downloads/)明确指出, 2.0 将原先的 RVO 框架替换为 ORCA. 所以"用 RVO2 做 ORCA 避障"是准确的说法, "ORCA 就是 RVO2"则把算法与软件实现混在了一起.
 
-下一篇继续使用这张速度图. 已经知道危险区在哪里后, [ORCA 怎样把多人避让变成几个半平面的交集](/writing/pathfinding-05/)?
+如果为了躲开左边的人而往右走, 右边也有人怎么办? [ORCA](/writing/pathfinding-05/)把两个人各自留下的余地画在同一张速度图上.
